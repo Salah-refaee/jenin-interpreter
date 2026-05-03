@@ -1,0 +1,8 @@
+import "module.jn";
+fn a() {
+  fn b() {
+    moduleHello();
+  }
+  b();
+}
+a();

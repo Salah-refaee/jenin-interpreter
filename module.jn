@@ -1,0 +1,8 @@
+fn moduleHello() {
+  fn l() {
+    println(value:x);
+  }
+  l();
+}
+
+no();

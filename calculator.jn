@@ -1,0 +1,42 @@
+println(value:"Calculator ------------");
+
+fn doMath(op) {
+  print(value:"1st: ");
+  let a = input(as:"number");
+  print(value:"2nd: ");
+  let b = input(as:"number");
+
+  let result = 0;
+  switch {
+    case strEquals(a:op, b:"add"): result = a + b;
+    case strEquals(a:op, b:"sub"): result = a - b;
+    case strEquals(a:op, b:"mul"): result = a * b;
+    case strEquals(a:op, b:"div"): result = a / b;
+    default: {} # already handled by the loop
+  }
+  let string = "X OPR Y = Z";
+  string = strReplace(str:string, old:"X",
+                      new:toString(value:a));
+  string = strReplace(str:string, old:"OPR",
+                      new:toString(value:op));
+  string = strReplace(str:string, old:"Y",
+                      new:toString(value:b));
+  string = strReplace(str:string, old:"Z",
+                      new:toString(value:result));
+  println(value:string);
+  return string;
+}
+
+loop (1 < 2) {
+  print(value:"operation: ");
+  let opr = strTrim(str:input(as:"string"));
+  
+  switch {
+    case strEquals(a:opr, b:"exit"): exit(code:0);
+    case strEquals(a:opr, b:"add"):  doMath(op:"add");
+    case strEquals(a:opr, b:"sub"):  doMath(op:"sub");
+    case strEquals(a:opr, b:"mul"):  doMath(op:"mul");
+    case strEquals(a:opr, b:"div"):  doMath(op:"div");
+    default: println(value:strConcat(a:"Unknown: ",b:opr));
+  }
+}

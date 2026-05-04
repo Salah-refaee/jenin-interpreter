@@ -1,0 +1,15 @@
+package org.jenin.sr.lexer;
+
+public class Token {
+  public final TokenType type;
+  public final String value;
+  public final int line;
+  public final int col;
+
+  public Token(TokenType type, String value, int line, int col) {
+    this.type = type;
+    this.value = value;
+    this.line = line;
+    this.col = col;
+  }
+}

@@ -1,7 +1,7 @@
 // MathModule.java
-import jenin.api.JeninModule;
-import interpreter.Interpreter;
-import functions.NativeFunc;
+import org.jenin.sr.api.JeninModule;
+import org.jenin.sr.interpreter.Interpreter;
+import org.jenin.sr.functions.NativeFunc;
 
 public class MathModule implements JeninModule {
   public void register(Interpreter interpreter) {

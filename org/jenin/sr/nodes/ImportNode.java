@@ -38,11 +38,10 @@ public class ImportNode implements Node {
     String input = "";
     if (path.endsWith(".class")) {
         try {
-            // strip .class, convert path separators to package dots
             String className = path
-              .substring(0, path.length() - 6)
-              .replace("/", ".")
-              .replace("\\", ".");
+                .replace(".class", "")
+                .replace("/", ".")
+                .replace("\\", ".");
             URLClassLoader loader = new URLClassLoader(
                 new URL[]{ new File(".").toURI().toURL() },
                 ImportNode.class.getClassLoader()

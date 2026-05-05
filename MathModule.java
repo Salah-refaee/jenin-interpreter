@@ -1,4 +1,6 @@
 // MathModule.java
+package modules;
+
 import org.jenin.sr.api.JeninModule;
 import org.jenin.sr.interpreter.Interpreter;
 import org.jenin.sr.functions.NativeFunc;

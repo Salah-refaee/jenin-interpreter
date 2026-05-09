@@ -1,6 +1,3 @@
-
-Original file line number	Diff line number	Diff line change
-@@ -0,0 +1,93 @@
 # Jenin Programming Language
 
 Jenin is a small scripting language written in Java.  
@@ -19,6 +16,7 @@ It was created in a few days as a learning project to understand how interpreter
 - Imports (multi-file support)
 - Stack traces with file + line info
 - Built-in functions (I/O, type conversion, strings)
+- Included java-native functions ClassLoader system
 
 ---
 
@@ -46,7 +44,7 @@ println(value:factorial(n:5));
 Compile:
 `./build.sh`
 Then run:
-`java Main <yourfile>`
+`java -jar path/to/jenin.jar <yourfile>`
 
 ---
 
@@ -71,7 +69,6 @@ Then run:
 - Error handling is still improving
 - Standard library is minimal
 - Syntax and features may change
-- No java-native functions ClassLoader yet (you should write thm yourself at (`interpreter.Builtins` then re-compile the project)
 
 ---
 

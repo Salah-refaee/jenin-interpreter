@@ -5,7 +5,7 @@ A basic scripting language I wrote in my free time.
 The name "Jenin" comes from my city, Jenin (Arabic: "جنين"),
 a city in Palestine where I was born and currently live.
 
-This language was made in 3–4 days, so don't expect much,
+This language was made in 7 days, so don't expect much,
 but I plan to improve it and add more features soon.
 One of the next goals is adding a ClassLoader to load .class
 files that provide Java-native functions based on your needs.
@@ -13,29 +13,13 @@ files that provide Java-native functions based on your needs.
 The current implementation has some small bugs,
 but it works well overall!
 
-Current features:
-- Variables (keyword: let)
-- Constants (keyword: const)
-- Functions (native supported via Scope.register())
-- Loops (keyword: loop)
-- Conditional execution (switch-case system)
-- I/O (via native functions: print, input)
-- Returning from functions
-- Break/continue in loops
-- Comments (starting with #)
-- Crash traceback / line detection
-- Arrays
-- Structs (keyword: struct)
-- Proper data type handling (e.g. string indexing)
-
-Unsupported / incomplete features:
-- ClassLoader for native functions
-- Proper standard library
-- Exceptions within the language
-
 If you notice any bugs or something that needs improvement,
 feel free to report it or modify the code!
 Any contributions and forks are welcome!
+
+I hope you enjoy using Jenin!
+
+-------------------------------------------------
 */
 
 package org.jenin.sr;

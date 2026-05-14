@@ -1,18 +1,3 @@
-let i = 0;
-let stopAt = 15;
-let skippedNumber = 8;
-loop (i < 20) {
-  i = i + 1;
-  switch {
-    case (i == stopAt): {
-      println(value:i);
-      break;
-    }
-    case (i == skippedNumber): {
-      continue; # dont print
-    }
-    default: {
-      println(value:i);
-    }
-  }
-}
+let a = 10;
+let b = 25;
+println(value:a + b);

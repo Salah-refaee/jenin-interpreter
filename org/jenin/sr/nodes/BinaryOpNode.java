@@ -3,7 +3,9 @@ package org.jenin.sr.nodes;
 import org.jenin.sr.scopes.Scope;
 import org.jenin.sr.additional.Pair;
 import org.jenin.sr.errors.StackTraceTools;
-import java.util.Objects;
+import java.util.*;
+
+
 
 public class BinaryOpNode implements Node {
   private final Node left;
@@ -25,21 +27,47 @@ public class BinaryOpNode implements Node {
     Object result;
 
     if (l instanceof Number && r instanceof Number) {
-      double a = ((Number) l).doubleValue();
-      double b = ((Number) r).doubleValue();
-      result = switch (op) {
-        case "+"  -> a + b;
-        case "-"  -> a - b;
-        case "*"  -> a * b;
-        case "/"  -> a / b;
-        case "==" -> a == b;
-        case "!=" -> a != b;
-        case "<"  -> a < b;
-        case ">"  -> a > b;
-        case "<=" -> a <= b;
-        case ">=" -> a >= b;
-        default -> throw new RuntimeException("Unknown operator: " + op);
-      };
+      // PATCH: this code always uses double, but it should be dynamic, fixed
+      // get the type of the left and right operands
+      // if both are integers, use integer arithmetic
+      // if any of them is a double, use double arithmetic
+      // otherwise, throw an error
+      Number temp_a = (Number) l;
+      Number temp_b = (Number) r;
+
+      if (temp_a instanceof Integer && temp_b instanceof Integer) {
+        int a = temp_a.intValue();
+        int b = temp_b.intValue();
+        result = switch (op) {
+          case "+"  -> a + b;
+          case "-"  -> a - b;
+          case "*"  -> a * b;
+          case "/"  -> a / b;
+          case "==" -> a == b;
+          case "!=" -> a != b;
+          case "<"  -> a < b;
+          case ">"  -> a > b;
+          case "<=" -> a <= b;
+          case ">=" -> a >= b;
+          default -> throw new RuntimeException("Unknown operator: " + op);
+        };
+      } else {
+        double a = temp_a.doubleValue();
+        double b = temp_b.doubleValue();
+        result = switch (op) {
+          case "+"  -> a + b;
+          case "-"  -> a - b;
+          case "*"  -> a * b;
+          case "/"  -> a / b;
+          case "==" -> a == b;
+          case "!=" -> a != b;
+          case "<"  -> a < b;
+          case ">"  -> a > b;
+          case "<=" -> a <= b;
+          case ">=" -> a >= b;
+          default -> throw new RuntimeException("Unknown operator: " + op);
+        };
+      }
     } else if (op.equals("+")) {
       result = String.valueOf(l) + String.valueOf(r);
     } else if (op.equals("==")) {

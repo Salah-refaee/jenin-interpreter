@@ -253,7 +253,11 @@ public class Parser {
       return new ArrayLiteralNode(elements, pos);
     }
     if (currentToken.type == TokenType.NUMBER) {
-      Node node = new LiteralNode(Double.parseDouble(currentToken.value), pos);
+      String numVal = currentToken.value;
+      Number numLiteral;
+      if (numVal.contains(".")) numLiteral = Double.parseDouble(numVal);
+      else numLiteral = Integer.parseInt(numVal);
+      Node node = new LiteralNode(numLiteral, pos);
       eat(TokenType.NUMBER, currentToken.value);
       return node;
     }

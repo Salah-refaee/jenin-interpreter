@@ -17,4 +17,5 @@ public class NativeFunc implements Func {
   public int arity() { return arity; }
   public String name() { return name; }
   public String strDebug() { return "<native function " + name + ">"; }
+  public java.util.List<String> params() { return null; }
 }

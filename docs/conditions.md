@@ -1,7 +1,24 @@
 # conditions
+## if-else
 - Syntax
 ```
-switch {
+if (expr) {
+   ...
+} else if (expr) {
+   ...
+} else {
+   ...
+}
+```
+- Example
+```
+well, you know :)
+```
+## switch-case
+- Syntax
+```
+# temporarily deprecated
+switch (something) {
   case <expr>: codeblock
   case <expr>: codeblock
   ...
@@ -10,12 +27,13 @@ switch {
 ```
 - Example
 ```
+# temporarily deprecated
 let name = input();
-switch {
-  case name == "jenin": {
+switch (name) {
+  case "jenin": {
     println(value:"ME!");
   }
-  case name == "salah": {
+  case "salah": {
     println(value:"MY CREATOR!");
   }
   default: {

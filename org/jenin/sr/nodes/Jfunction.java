@@ -19,4 +19,5 @@ public class Jfunction implements Func {
   public int arity() { return params.size(); }
   public String name() { return name; }
   public String strDebug() { return "<function " + name + ">"; }
+  public java.util.List<String> params() { return params; }
 }

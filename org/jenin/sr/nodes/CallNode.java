@@ -23,8 +23,20 @@ public class CallNode implements Node {
     StackTraceTools.add((String) env.get("__file__"), pos, func);
     Func f = (Func) env.get(func);
     Scope callScope = env.branch();
-    for (Pair<String, Node> arg : args)
+    java.util.List<String> fParams = f.params();
+    for (Pair<String, Node> arg : args) {
+      if (fParams != null && !fParams.contains(arg.getKey())) {
+        throw new RuntimeException("Unrecognized argument: " + arg.getKey());
+      }
       callScope.let(arg.getKey(), arg.getValue().eval(env));
+    }
+    if (fParams != null) {
+      for (String param : fParams) {
+        if (args.stream().noneMatch(a -> a.getKey().equals(param))) {
+          throw new RuntimeException("Missing argument: " + param + "\nNote: its better nullify the argument if you dont want to pass a value");
+        }
+      }
+    }
     try {
       Object obj = f.call(callScope);
       StackTraceTools.finished();

@@ -10,7 +10,7 @@ It was created in a few days as a learning project to understand how interpreter
 
 - Functions (user-defined + native)
 - Loops (loop, break, continue)
-- Conditional execution (CUSTOM KIND OF switch-case, NOT THE TRADITIONAL ONE)
+- Conditional execution (both of if-else and switch-case are supported)
 - Arrays (creation, access, assignment)
 - Structs (key-value objects, semi-HashMap)
 - Imports (multi-file support)
@@ -23,16 +23,10 @@ It was created in a few days as a learning project to understand how interpreter
 ## Example
 ```jenin
 fn factorial(n) {
-  switch {
-# ******--> as you see, theres no expression here, thats because
-# the `case` blocks each work as an independent if-statement.
-# the `default` block will work if all previous blocks failed.
-    case (n <= 0): {
-      return 1;
-    }
-    default: {
-      return n * factorial(n:(n - 1));
-    }
+  if (n < 1) {
+    return 1;
+  } else {
+    return n * factorial()
   }
 }
 println(value:factorial(n:5)); 

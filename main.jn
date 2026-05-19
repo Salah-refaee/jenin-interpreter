@@ -1,9 +1,36 @@
-fn fact(n) {
-  if (n < 1) {
-    return 1;
-  } else {
-    return (n * fact(n:n - 1));
+let stack = [];
+let sum = 0;
+
+switch (input()) {
+  "add" -> {
+    sum = sum + 1;
+  }
+  "sub" -> {
+    sum = sum - 1;
+  }
+  "push" -> {
+    push(arr:stack, value:sum);
+    sum = 0;
+  }
+  "pop" -> {
+    sum = pop(arr:stack);
+  }
+  "swap" -> {
+    let a = pop(arr:stack);
+    let b = pop(arr:stack);
+    push(arr:stack, value:a);
+    push(arr:stack, value:a);
+  }
+  "print" -> {
+    println(value:pop(arr:stack));
+  }
+  "debug" -> {
+    println(value:stack);
+  }
+  "drop" -> {
+    pop(arr:stack);
+  }
+  "exit": {
+    exit(sum);
   }
 }
-
-println(value:fact(n:5));

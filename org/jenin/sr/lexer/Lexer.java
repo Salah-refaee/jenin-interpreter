@@ -139,7 +139,7 @@ public class Lexer {
         col++;
         if (idx < input.length()) {
           char next = input.charAt(idx);
-          if (next == '=' || next == c) {
+          if (next == '=' || next == c || (c == '-' && next == '>')) {
             idx++;
             col++;
           }
@@ -196,6 +196,17 @@ public class Lexer {
         idx++;
         col++;
         return new Token(TokenType.PUNCTUATION, ".", line, col - 1);
+      }
+
+      if ("!@$&?".indexOf(c) != -1) {
+        idx++;
+        col++;
+        if ("!@$&?".indexOf(peek().toString()) != -1) {
+          idx++;
+          col++;
+          return new Token(TokenType.OPERATOR, String.valueOf(c) + String.valueOf(peek()), line, col - 2);
+        }
+        return new Token(TokenType.OPERATOR, String.valueOf(c), line, col - 1);
       }
 
       throw new RuntimeException("Unexpected character: " + c + " at line " + line + ", col " + col);

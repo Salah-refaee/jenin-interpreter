@@ -104,7 +104,7 @@ switch (x) {
 }
 ```
 
-`?` is the default case. Each arm is an expression, not a block.
+`?` is the default case. Each arm is an expression or a block.
 
 ---
 
@@ -143,6 +143,7 @@ import "modules/Math.class";    # import a native Java module
 ```
 
 All names defined at the top level of an imported `.jn` file become available in the current scope.
+(WARN: starting from version 0.4 and above, all names you import will be stored in a namespace)
 
 ---
 
@@ -169,7 +170,7 @@ All names defined at the top level of an imported `.jn` file become available in
 | Function | Arguments | Description |
 |---|---|---|
 | `toString` | `value` | Convert to string |
-| `toNumber` | `value` | Convert to number |
+| `toType` | `value`, `type` | Convert to a specific type |
 | `toBoolean` | `value` | Convert to boolean |
 | `type` | `value` | Returns type name as string |
 

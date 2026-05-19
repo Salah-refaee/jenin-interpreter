@@ -86,10 +86,21 @@ public class Builtins {
       return stringify(scope.get("value"));
     }));
 
-    interpreter.registerNativeFunc("toNumber", new NativeFunc("toNumber", 1, (scope) -> {
+    interpreter.registerNativeFunc("toType", new NativeFunc("toType", 2, (scope) -> {
       Object value = scope.get("value");
-      try { return Double.parseDouble(String.valueOf(value)); }
-      catch (Exception e) { throw new RuntimeException("Cannot convert to number: " + value); }
+      String type = (String) scope.get("type");
+      switch (type) {
+        case "int":
+          return ((Number) value).intValue();
+        case "float":
+          return ((Number) value).doubleValue();
+        case "string":
+          return stringify(value); // idk if this is the best way to do it
+        case "boolean":
+          return (boolean) value; // same lol
+        default:
+          throw new RuntimeException("Unknown type: " + type);
+      }
     }));
 
     interpreter.registerNativeFunc("toBoolean", new NativeFunc("toBoolean", 1, (scope) -> {

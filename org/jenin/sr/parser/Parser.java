@@ -80,14 +80,20 @@ public class Parser {
         while (currentToken.type != TokenType.SCOPEEND) {
           Node caseExpr = parseExpression();
           eat(TokenType.OPERATOR, "->");
-          Node caseBody = parseExpression();
-          cases.add(new Pair<>(caseExpr, caseBody));
+          if (currentToken.type == TokenType.SCOPESTART) {
+            cases.add(new Pair<>(caseExpr, parseBlockNonScoped()));
+          } else {
+            cases.add(new Pair<>(caseExpr, parseExpression()));
+          }
           if (currentToken.type == TokenType.PUNCTUATION && currentToken.value.equals(","))
             eat(TokenType.PUNCTUATION, ",");
-          else if (currentToken.type == TokenType.OPERATOR && currentToken.value.equals("?")) {
+          if (currentToken.type == TokenType.OPERATOR && currentToken.value.equals("?")) {
             eat(TokenType.OPERATOR, "?");
             eat(TokenType.OPERATOR, "->");
-            defaultCase = parseExpression();
+            if (currentToken.type == TokenType.SCOPESTART)
+              defaultCase = parseBlockNonScoped();
+            else
+              defaultCase = parseExpression();
             //eat(TokenType.SCOPEEND, "}");  // already eaten below
             break;
           }

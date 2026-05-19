@@ -17,8 +17,7 @@ well, you know :)
 ## switch-case
 - Syntax
 ```
-# temporarily deprecated
-switch (something) {
+switch (expr) {
   case <expr>: codeblock
   case <expr>: codeblock
   ...
@@ -27,7 +26,6 @@ switch (something) {
 ```
 - Example
 ```
-# temporarily deprecated
 let name = input();
 switch (name) {
   case "jenin": {

@@ -14,12 +14,18 @@ public class Lexer {
 
   private final List<String> keywords = Arrays.asList(
     "let", "del", "switch", "case", "default", "return", "fn",
-    "loop", "break", "continue", "const", "struct", "import"
+    "loop", "break", "continue", "const", "struct", "import", 
+    "if", "else"
   );
 
   public Lexer(String input) {
     this.input = input;
     cleanup();
+  }
+
+  // unused but useful for extending the lexer
+  public void newKeyword(String keyword) {
+    keywords.add(keyword);
   }
 
   public void cleanup() {

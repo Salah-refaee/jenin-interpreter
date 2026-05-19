@@ -1,3 +1,9 @@
-let a = 10;
-let b = 25;
-println(value:a + b + .5);
+fn fact(n) {
+  if (n < 1) {
+    return 1;
+  } else {
+    return (n * fact(n:n - 1));
+  }
+}
+
+println(value:fact(n:5));

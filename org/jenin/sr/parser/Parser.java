@@ -69,28 +69,31 @@ public class Parser {
         eat(TokenType.PUNCTUATION, ";");
         return new ReturnNode(expr, pos);
       } else if (currentToken.value.equals("switch")) {
+        // switch (expr) { case1 -> body1, case2 -> body2, ..., ? -> body}  -- ? is default case
         eat(TokenType.KEYWORD, "switch");
+        eat(TokenType.PUNCTUATION, "(");
+        Node expr = parseExpression();
+        eat(TokenType.PUNCTUATION, ")");
         eat(TokenType.SCOPESTART, "{");
         List<Pair<Node, Node>> cases = new ArrayList<>();
         Node defaultCase = null;
         while (currentToken.type != TokenType.SCOPEEND) {
-          if (currentToken.type == TokenType.KEYWORD && currentToken.value.equals("case")) {
-            eat(TokenType.KEYWORD, "case");
-            Node value = parseExpression();
-            eat(TokenType.OPERATOR, ":");
-            Node body = (currentToken.type == TokenType.SCOPESTART) ? parseBlockNonScoped() : parseStatement();
-            cases.add(new Pair<>(value, body));
-          } else if (currentToken.type == TokenType.KEYWORD && currentToken.value.equals("default")) {
-            eat(TokenType.KEYWORD, "default");
-            eat(TokenType.OPERATOR, ":");
-            defaultCase = (currentToken.type == TokenType.SCOPESTART) ? parseBlockNonScoped() : parseStatement();
-          } else {
-            throw new RuntimeException("Unexpected token in switch: " + currentToken.type
-              + "(" + currentToken.value + ") at line " + currentToken.line + ", col " + currentToken.col);
+          Node caseExpr = parseExpression();
+          eat(TokenType.OPERATOR, "->");
+          Node caseBody = parseExpression();
+          cases.add(new Pair<>(caseExpr, caseBody));
+          if (currentToken.type == TokenType.PUNCTUATION && currentToken.value.equals(","))
+            eat(TokenType.PUNCTUATION, ",");
+          else if (currentToken.type == TokenType.OPERATOR && currentToken.value.equals("?")) {
+            eat(TokenType.OPERATOR, "?");
+            eat(TokenType.OPERATOR, "->");
+            defaultCase = parseExpression();
+            //eat(TokenType.SCOPEEND, "}");  // already eaten below
+            break;
           }
         }
         eat(TokenType.SCOPEEND, "}");
-        return new SwitchNode(cases, defaultCase, pos);
+        return new SwitchNode(expr, cases, defaultCase, pos);
       } else if (currentToken.value.equals("fn")) {
         eat(TokenType.KEYWORD, "fn");
         String name = currentToken.value;
@@ -151,6 +154,26 @@ public class Parser {
         eat(TokenType.STRING, path);
         eat(TokenType.PUNCTUATION, ";");
         return new ImportNode(path, pos);
+      } else if (currentToken.value.equals("if")) {
+        eat(TokenType.KEYWORD, "if");
+        List<Pair<Node, Node>> cases = new ArrayList<>();
+        Node defaultCase = null;
+        while (true) {
+          Node condition = parseExpression();
+          Node body = parseBlockNonScoped();
+          cases.add(new Pair<>(condition, body));
+          if (currentToken.type == TokenType.KEYWORD && currentToken.value.equals("else")) {
+            eat(TokenType.KEYWORD, "else");
+            if (currentToken.type == TokenType.KEYWORD && currentToken.value.equals("if")) {
+              eat(TokenType.KEYWORD, "if");
+              continue;
+            } else {
+              defaultCase = parseBlockNonScoped();
+              break;
+            }
+          } else break;
+        }
+        return new ConditionalChainNode(cases, defaultCase, pos);
       }
     } else if (currentToken.type == TokenType.IDENTIFIER) {
       String name = currentToken.value;

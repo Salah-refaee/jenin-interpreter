@@ -18,7 +18,7 @@ It was created in a few days as a learning project to understand how interpreter
 - Built-in functions (I/O, type conversion, strings)
 - Included java-native functions ClassLoader system
 
-### note: see [language documents](doc/README.md) for mote info
+### note: see [language documents](doc/README.md) for more info
 *(some information may not be included, please be careful)*
 
 ---

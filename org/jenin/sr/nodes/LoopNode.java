@@ -19,13 +19,20 @@ public class LoopNode implements Node {
 
   public Object eval(Scope env) {
     StackTraceTools.add((String) env.get("__file__"), pos, "<loop>");
-    while (Boolean.TRUE.equals(condition.eval(env))) {
+    while (checkTruthy(condition.eval(env))) {
       try { body.eval(env); }
       catch (Break b) { break; }
       catch (Continue c) { continue; }
     }
     StackTraceTools.finished();
     return null;
+  }
+
+  private boolean checkTruthy(Object obj) {
+    if (obj instanceof Boolean) return (Boolean) obj;
+    if (obj instanceof Number) return ((Number) obj).doubleValue() != 0;
+    if (obj instanceof String) return !((String) obj).isEmpty();
+    return obj != null;
   }
 
   public String strDebug() { return "loop " + condition.strDebug() + " { " + body.strDebug() + " }"; }

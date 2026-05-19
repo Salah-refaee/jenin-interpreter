@@ -18,6 +18,9 @@ It was created in a few days as a learning project to understand how interpreter
 - Built-in functions (I/O, type conversion, strings)
 - Included java-native functions ClassLoader system
 
+### note: see [language documents](doc/README.md) for mote info
+*(some information may not be included, please be careful)*
+
 ---
 
 ## Example
@@ -45,7 +48,7 @@ Then run:
 ## Philosophy
 
 - Keep things simple
-- Explicit sometimes (named arguments)
+- Explicit sometimes (named arguments as an example)
 - Small but flexible core
 
 ---
@@ -73,6 +76,7 @@ Then run:
 - Namespaces
 - More data structures
 - Module system improvements
+- Data types handling improvments (important for structs)
 
 ---
 

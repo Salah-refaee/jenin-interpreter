@@ -14,7 +14,7 @@ public class DelNode implements Node {
   }
 
   public Object eval(Scope env) {
-    StackTraceTools.add((String) env.get("__file__"), pos, "<delete " + name + ">");
+    StackTraceTools.add((String) env.get("__file__", env), pos, "<delete " + name + ">");
     env.del(name);
     StackTraceTools.finished();
     return null;

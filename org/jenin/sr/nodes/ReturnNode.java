@@ -15,7 +15,7 @@ public class ReturnNode implements Node {
   }
 
   public Object eval(Scope env) {
-    StackTraceTools.add((String) env.get("__file__"), pos, "<return>");
+    StackTraceTools.add((String) env.get("__file__", env), pos, "<return>");
     throw new Return(expr.eval(env));
   }
 

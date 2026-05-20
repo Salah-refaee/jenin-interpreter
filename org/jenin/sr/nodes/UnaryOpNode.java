@@ -16,7 +16,7 @@ public class UnaryOpNode implements Node {
   }
 
   public Object eval(Scope env) {
-    StackTraceTools.add((String) env.get("__file__"), pos, "<unary op " + op + ">");
+    StackTraceTools.add((String) env.get("__file__", env), pos, "<unary op " + op + ">");
     Object val = expr.eval(env);
     Object result;
     if (op.equals("!")) result = !(Boolean) val;

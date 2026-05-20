@@ -15,7 +15,7 @@ public class Lexer {
   private final List<String> keywords = Arrays.asList(
     "let", "del", "switch", "case", "default", "return", "fn",
     "loop", "break", "continue", "const", "struct", "import", 
-    "if", "else"
+    "if", "else", "public", "private", "namespace"
   );
 
   public Lexer(String input) {

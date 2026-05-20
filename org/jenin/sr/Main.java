@@ -63,7 +63,7 @@ public class Main {
     Parser parser = new Parser(lexer);
     Interpreter interpreter = new Interpreter(parser, new Scope(null));
     Builtins.registerAll(interpreter);
-    interpreter.setVariable("__file__", args[0]);
+    interpreter.setVariable("__file__", args[0], true);
     try {
       interpreter.interpret();
     } catch (Return r) {

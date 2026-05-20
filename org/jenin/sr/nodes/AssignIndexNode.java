@@ -20,7 +20,7 @@ public class AssignIndexNode implements Node {
 
   @SuppressWarnings("unchecked")
   public Object eval(Scope env) {
-    StackTraceTools.add((String) env.get("__file__"), pos, "<assign index>");
+    StackTraceTools.add((String) env.get("__file__", env), pos, "<assign index>");
     Object arr = array.eval(env);
     Object idx = index.eval(env);
     Object val = value.eval(env);

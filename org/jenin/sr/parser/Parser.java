@@ -45,16 +45,28 @@ public class Parser {
 
   private Node parseStatement() {
     Pair<Integer, Integer> pos = new Pair<>(currentToken.line, currentToken.col);
-
+    boolean ispublic = false; // used with let, fn, struct, and const, also namespace in the future
     if (currentToken.type == TokenType.KEYWORD) {
-      if (currentToken.value.equals("let")) {
+      if (currentToken.value.equals("public")) {
+        ispublic = true;
+        eat(TokenType.KEYWORD, "public");  // eat the public keyword
+        if (currentToken.type != TokenType.KEYWORD && !(List.of("let", "const", "fn", "namespace").contains(currentToken.value)) ) throw new RuntimeException("Expected keywords 'let', 'const', 'fn' or 'namespace' after public, at line " + currentToken.line + ", col " + currentToken.col);
+        // continue parsing
+        return parseStatement();
+      } else if (currentToken.value.equals("private")) {
+        ispublic = false;
+        eat(TokenType.KEYWORD, "private");  // eat the private keyword
+        if (currentToken.type != TokenType.KEYWORD || !(List.of("let", "const", "fn", "namespace").contains(currentToken.value)) ) throw new RuntimeException("Expected keywords 'let', 'const', 'fn' or 'namespace' after private, at line " + currentToken.line + ", col " + currentToken.col);
+        // continue parsing
+        return parseStatement();
+      } else if (currentToken.value.equals("let")) {
         eat(TokenType.KEYWORD, "let");
         String name = currentToken.value;
         eat(TokenType.IDENTIFIER, name);
         eat(TokenType.OPERATOR, "=");
         Node value = parseExpression();
         eat(TokenType.PUNCTUATION, ";");
-        return new LetNode(name, value, pos);
+        return new LetNode(name, value, pos, ispublic);
       } else if (currentToken.value.equals("const")) {
         eat(TokenType.KEYWORD, "const");
         String name = currentToken.value;
@@ -62,7 +74,7 @@ public class Parser {
         eat(TokenType.OPERATOR, "=");
         Node value = parseExpression();
         eat(TokenType.PUNCTUATION, ";");
-        return new ConstNode(name, value, pos);
+        return new ConstNode(name, value, pos, ispublic);
       } else if (currentToken.value.equals("return")) {
         eat(TokenType.KEYWORD, "return");
         Node expr = parseExpression();
@@ -101,6 +113,7 @@ public class Parser {
         eat(TokenType.SCOPEEND, "}");
         return new SwitchNode(expr, cases, defaultCase, pos);
       } else if (currentToken.value.equals("fn")) {
+        
         eat(TokenType.KEYWORD, "fn");
         String name = currentToken.value;
         eat(TokenType.IDENTIFIER, name);
@@ -115,7 +128,7 @@ public class Parser {
         }
         eat(TokenType.PUNCTUATION, ")");
         Node body = parseBlock();
-        return new FuncDefinitionNode(name, params, body, pos);
+        return new FuncDefinitionNode(name, params, body, pos, ispublic);
       } else if (currentToken.value.equals("struct")) {
         eat(TokenType.KEYWORD, "struct");
         String name = currentToken.value;

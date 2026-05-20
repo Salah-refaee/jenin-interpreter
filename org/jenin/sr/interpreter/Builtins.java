@@ -41,28 +41,28 @@ public class Builtins {
 
   public static void registerAll(Interpreter interpreter) {
     interpreter.registerNativeFunc("print", new NativeFunc("print", 1, (scope) -> {
-      System.out.print(stringify(scope.get("value")));
+      System.out.print(stringify(scope.get("value", scope)));
       return null;
-    }));
+    }), true);
 
     interpreter.registerNativeFunc("println", new NativeFunc("println", 1, (scope) -> {
-      System.out.println(stringify(scope.get("value")));
+      System.out.println(stringify(scope.get("value", scope)));
       return null;
-    }));
+    }), true);
 
     interpreter.registerNativeFunc("debug", new NativeFunc("debug", 1, (scope) -> {
-      Object val = scope.get("value");
+      Object val = scope.get("value", scope);
       System.out.println("-------- DEBUG --------");
       System.out.println("Value: " + stringify(val));
       System.out.println("Type : " + typeOf(val));
       System.out.println("Exact: " + (val == null ? "null" : val.getClass().getName()));
       System.out.println("-----------------------");
       return null;
-    }));
+    }), true);
 
     interpreter.registerNativeFunc("input", new NativeFunc("input", 0, (scope) -> {
       Object asObj = null;
-      try { asObj = scope.get("as"); } catch (RuntimeException e) { /* no arg */ }
+      try { asObj = scope.get("as", scope); } catch (RuntimeException e) { /* no arg */ }
       String as = (asObj instanceof String) ? (String) asObj : "string";
       switch (as) {
         case "number":
@@ -73,22 +73,22 @@ public class Builtins {
           catch (Exception e) { scanner.nextLine(); return null; }
         default: return scanner.nextLine();
       }
-    }));
+    }), true);
 
     interpreter.registerNativeFunc("exit", new NativeFunc("exit", 0, (scope) -> {
       Object obj = null;
-      try { obj = scope.get("code"); } catch (RuntimeException e) { /* no arg */ }
+      try { obj = scope.get("code", scope); } catch (RuntimeException e) { /* no arg */ }
       System.exit((obj instanceof Number) ? ((Number) obj).intValue() : 0);
       return null;
-    }));
+    }), true);
 
     interpreter.registerNativeFunc("toString", new NativeFunc("toString", 1, (scope) -> {
-      return stringify(scope.get("value"));
-    }));
+      return stringify(scope.get("value", scope));
+    }), true);
 
     interpreter.registerNativeFunc("toType", new NativeFunc("toType", 2, (scope) -> {
-      Object value = scope.get("value");
-      String type = (String) scope.get("type");
+      Object value = scope.get("value", scope);
+      String type = (String) scope.get("type", scope);
       switch (type) {
         case "int":
           return ((Number) value).intValue();
@@ -97,90 +97,90 @@ public class Builtins {
         case "string":
           return stringify(value); // idk if this is the best way to do it
         case "boolean":
-          return (boolean) value; // same lol
+          return ((Number) value).doubleValue() != 0; // same lol
         default:
           throw new RuntimeException("Unknown type: " + type);
       }
-    }));
+    }), true);
 
     interpreter.registerNativeFunc("toBoolean", new NativeFunc("toBoolean", 1, (scope) -> {
-      return Boolean.parseBoolean(String.valueOf(scope.get("value")));
-    }));
+      return Boolean.parseBoolean(String.valueOf(scope.get("value", scope)));
+    }), true);
 
     interpreter.registerNativeFunc("panic", new NativeFunc("panic", 1, (scope) -> {
-      throw new RuntimeException(String.valueOf(scope.get("message")));
-    }));
+      throw new RuntimeException(String.valueOf(scope.get("message", scope)));
+    }), true);
 
     interpreter.registerNativeFunc("type", new NativeFunc("type", 1, (scope) -> {
-      return typeOf(scope.get("value"));
-    }));
+      return typeOf(scope.get("value", scope));
+    }), true);
 
     interpreter.registerNativeFunc("len", new NativeFunc("len", 1, (scope) -> {
-      Object value = scope.get("value");
+      Object value = scope.get("value", scope);
       if (value instanceof String) return (double) ((String) value).length();
       if (value instanceof List) return (double) ((List<?>) value).size();
       throw new RuntimeException("Cannot get length of type: " + typeOf(value));
-    }));
+    }), true);
 
     interpreter.registerNativeFunc("strSlice", new NativeFunc("strSlice", 3, (scope) -> {
-      String str = (String) scope.get("str");
-      int start = Math.max(0, ((Number) scope.get("start")).intValue());
-      int end = Math.min(str.length(), ((Number) scope.get("end")).intValue());
+      String str = (String) scope.get("str", scope);
+      int start = Math.max(0, ((Number) scope.get("start", scope)).intValue());
+      int end = Math.min(str.length(), ((Number) scope.get("end", scope)).intValue());
       return start > end ? "" : str.substring(start, end);
-    }));
+    }), true);
 
     interpreter.registerNativeFunc("strConcat", new NativeFunc("strConcat", 2, (scope) -> {
-      return String.valueOf(scope.get("a")) + String.valueOf(scope.get("b"));
-    }));
+      return String.valueOf(scope.get("a", scope)) + String.valueOf(scope.get("b", scope));
+    }), true);
 
     interpreter.registerNativeFunc("strSplit", new NativeFunc("strSplit", 2, (scope) -> {
-      String str = (String) scope.get("str");
-      String delim = (String) scope.get("delimiter");
+      String str = (String) scope.get("str", scope);
+      String delim = (String) scope.get("delimiter", scope);
       return new ArrayList<>(Arrays.asList(str.split(delim)));
-    }));
+    }), true);
 
     interpreter.registerNativeFunc("strReplace", new NativeFunc("strReplace", 3, (scope) -> {
-      return ((String) scope.get("str")).replace((String) scope.get("old"), (String) scope.get("new"));
-    }));
+      return ((String) scope.get("str", scope)).replace((String) scope.get("old", scope), (String) scope.get("new", scope));
+    }), true);
 
     interpreter.registerNativeFunc("strTrim", new NativeFunc("strTrim", 1, (scope) -> {
-      return ((String) scope.get("str")).trim();
-    }));
+      return ((String) scope.get("str", scope)).trim();
+    }), true);
 
     interpreter.registerNativeFunc("strEquals", new NativeFunc("strEquals", 2, (scope) -> {
-      return String.valueOf(scope.get("a")).equals(String.valueOf(scope.get("b")));
-    }));
+      return String.valueOf(scope.get("a", scope)).equals(String.valueOf(scope.get("b", scope)));
+    }), true);
 
     interpreter.registerNativeFunc("strContains", new NativeFunc("strContains", 2, (scope) -> {
-      return String.valueOf(scope.get("str")).contains(String.valueOf(scope.get("substr")));
-    }));
+      return String.valueOf(scope.get("str", scope)).contains(String.valueOf(scope.get("substr", scope)));
+    }), true);
 
     interpreter.registerNativeFunc("strIndexOf", new NativeFunc("strIndexOf", 2, (scope) -> {
-      return (double) String.valueOf(scope.get("str")).indexOf(String.valueOf(scope.get("substr")));
-    }));
+      return (int) String.valueOf(scope.get("str", scope)).indexOf(String.valueOf(scope.get("substr", scope)));
+    }), true);
 
     interpreter.registerNativeFunc("format", new NativeFunc("format", 2, (scope) -> {
-      return String.format(String.valueOf(scope.get("format")), scope.get("args"));
-    }));
+      return String.format(String.valueOf(scope.get("format", scope)), scope.get("args", scope));
+    }), true);
 
     interpreter.registerNativeFunc("exec", new NativeFunc("exec", 1, (scope) -> {
       throw new RuntimeException("exec is not implemented yet");
-    }));
+    }), true);
 
     interpreter.registerNativeFunc("push", new NativeFunc("push", 2, (scope) -> {
-      Object arrObj = scope.get("arr");
+      Object arrObj = scope.get("arr", scope);
       if (!(arrObj instanceof List)) throw new RuntimeException("push: first argument must be an array");
       @SuppressWarnings("unchecked") List<Object> list = (List<Object>) arrObj;
-      list.add(scope.get("value"));
+      list.add(scope.get("value", scope));
       return null;
-    }));
+    }), true);
 
     interpreter.registerNativeFunc("pop", new NativeFunc("pop", 1, (scope) -> {
-      Object arrObj = scope.get("arr");
+      Object arrObj = scope.get("arr", scope);
       if (!(arrObj instanceof List)) throw new RuntimeException("pop: argument must be an array");
       @SuppressWarnings("unchecked") List<Object> list = (List<Object>) arrObj;
       if (list.isEmpty()) throw new RuntimeException("pop: array is empty");
       return list.remove(list.size() - 1);
-    }));
+    }), true);
   }
 }

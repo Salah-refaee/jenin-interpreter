@@ -20,8 +20,8 @@ public class FieldAssignNode implements Node {
 
   @SuppressWarnings("unchecked")
   public Object eval(Scope env) {
-    StackTraceTools.add((String) env.get("__file__"), pos, "<field assign " + objName + "." + field + ">");
-    Object obj = env.get(objName);
+    StackTraceTools.add((String) env.get("__file__", env), pos, "<field assign " + objName + "." + field + ">");
+    Object obj = env.get(objName, env);
     if (!(obj instanceof Map)) throw new RuntimeException("Cannot assign field of non-struct: " + objName);
     ((Map<String, Object>) obj).put(field, value.eval(env));
     StackTraceTools.finished();

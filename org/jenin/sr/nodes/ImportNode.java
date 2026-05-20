@@ -33,7 +33,7 @@ public class ImportNode implements Node {
   public String strDebug() { return "import " + path; }
 
   public Object eval(Scope env) {
-    StackTraceTools.add((String) env.get("__file__"), pos, "<import " + path + ">");
+    StackTraceTools.add((String) env.get("__file__", env), pos, "<import " + path + ">");
     // load file -> lexer -> parser -> interpreter -> extract names from env -> add to current env
     String input = "";
     if (path.endsWith(".class")) {

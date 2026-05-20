@@ -18,7 +18,7 @@ public class ConditionalChainNode implements Node {
   }
 
   public Object eval(Scope env) {
-    StackTraceTools.add((String) env.get("__file__"), pos, "<ifelsechains>");
+    StackTraceTools.add((String) env.get("__file__", env), pos, "<ifelsechains>");
     for (Pair<Node, Node> case_ : cases) {
       if ((boolean) case_.getKey().eval(env)) {
         StackTraceTools.finished();

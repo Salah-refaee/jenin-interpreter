@@ -9,16 +9,18 @@ public class FuncDefinitionNode implements Node {
   private final List<String> params;
   private final Node body;
   private final Pair<Integer, Integer> pos;
+  private final boolean ispublic;
 
-  public FuncDefinitionNode(String name, List<String> params, Node body, Pair<Integer, Integer> pos) {
+  public FuncDefinitionNode(String name, List<String> params, Node body, Pair<Integer, Integer> pos, boolean ispublic) {
     this.name = name;
     this.params = params;
     this.body = body;
     this.pos = pos;
+    this.ispublic = ispublic;
   }
 
   public Object eval(Scope env) {
-    env.define(name, new Jfunction(name, params, body));
+    env.define(name, new Jfunction(name, params, body), ispublic);
     return null;
   }
 

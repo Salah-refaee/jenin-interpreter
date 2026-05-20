@@ -18,7 +18,7 @@ public class IndexNode implements Node {
 
   @SuppressWarnings("unchecked")
   public Object eval(Scope env) {
-    StackTraceTools.add((String) env.get("__file__"), pos, "<index>");
+    StackTraceTools.add((String) env.get("__file__", env), pos, "<index>");
     Object arr = array.eval(env);
     Object idx = index.eval(env);
     if (!(arr instanceof List)) throw new RuntimeException("Cannot index non-array");

@@ -17,7 +17,7 @@ public class ArrayLiteralNode extends LiteralNode {
 
   @Override
   public Object eval(Scope env) {
-    StackTraceTools.add((String) env.get("__file__"), pos, "<array literal>");
+    StackTraceTools.add((String) env.get("__file__", env), pos, "<array literal>");
     List<Object> evaluated = new ArrayList<>();
     for (Object o : elements) {
       evaluated.add(o instanceof Node ? ((Node) o).eval(env) : o);

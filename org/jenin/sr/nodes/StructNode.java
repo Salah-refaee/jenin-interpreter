@@ -18,7 +18,7 @@ public class StructNode implements Node {
   }
 
   public Object eval(Scope env) {
-    StackTraceTools.add((String) env.get("__file__"), pos, "<struct " + name + ">");
+    StackTraceTools.add((String) env.get("__file__", env), pos, "<struct " + name + ">");
     HashMap<String, Object> struct = new HashMap<>();
     for (Map.Entry<String, Node> entry : fields.entrySet())
       struct.put(entry.getKey(), entry.getValue().eval(env));

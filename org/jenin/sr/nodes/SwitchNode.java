@@ -20,7 +20,7 @@ public class SwitchNode implements Node {
   }
 
   public Object eval(Scope env) {
-    StackTraceTools.add((String) env.get("__file__"), pos, "<switch>");
+    StackTraceTools.add((String) env.get("__file__", env), pos, "<switch>");
     Object value = expr.eval(env);
     for (Pair<Node, Node> case_ : cases) {
       if (value.equals(case_.getKey().eval(env))) {

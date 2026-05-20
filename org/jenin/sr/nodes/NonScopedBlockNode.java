@@ -16,7 +16,7 @@ public class NonScopedBlockNode implements Node {
   }
 
   public Object eval(Scope env) {
-    StackTraceTools.add((String) env.get("__file__"), pos, "<block>");
+    StackTraceTools.add((String) env.get("__file__", env), pos, "<block>");
     Object last = null;
     for (Node s : statements) last = s.eval(env);
     StackTraceTools.finished();

@@ -18,7 +18,7 @@ public class FieldAccessNode implements Node {
 
   @SuppressWarnings("unchecked")
   public Object eval(Scope env) {
-    StackTraceTools.add((String) env.get("__file__"), pos, "<field access ." + field + ">");
+    StackTraceTools.add((String) env.get("__file__", env), pos, "<field access ." + field + ">");
     Object obj = object.eval(env);
     if (!(obj instanceof Map)) throw new RuntimeException("Cannot access field of non-struct: " + object.strDebug());
     Map<String, Object> map = (Map<String, Object>) obj;

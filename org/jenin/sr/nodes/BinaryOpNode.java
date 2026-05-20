@@ -21,7 +21,7 @@ public class BinaryOpNode implements Node {
   }
 
   public Object eval(Scope env) {
-    StackTraceTools.add((String) env.get("__file__"), pos, "<binary op " + op + ">");
+    StackTraceTools.add((String) env.get("__file__", env), pos, "<binary op " + op + ">");
     Object l = left.eval(env);
     Object r = right.eval(env);
     Object result;

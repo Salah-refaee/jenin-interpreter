@@ -18,7 +18,7 @@ public class LoopNode implements Node {
   }
 
   public Object eval(Scope env) {
-    StackTraceTools.add((String) env.get("__file__"), pos, "<loop>");
+    StackTraceTools.add((String) env.get("__file__", env), pos, "<loop>");
     while (checkTruthy(condition.eval(env))) {
       try { body.eval(env); }
       catch (Break b) { break; }

@@ -16,7 +16,7 @@ public class AssignNode implements Node {
   }
 
   public Object eval(Scope env) {
-    StackTraceTools.add((String) env.get("__file__"), pos, "<assign " + name + ">");
+    StackTraceTools.add((String) env.get("__file__", env), pos, "<assign " + name + ">");
     Object val = value.eval(env);
     env.set(name, val);
     StackTraceTools.finished();

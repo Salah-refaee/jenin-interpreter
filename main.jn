@@ -1,43 +1,4 @@
-let stack = [];
-let sum = 0;
+import "module.jn";
 
-# RANDOM CODE USED FOR TESTING, not really a thing
-
-loop (1) {
-  switch (input()) {
-    "add" -> {
-      sum = sum + 1;
-    }
-    "sub" -> {
-      sum = sum - 1;
-    }
-    "push" -> {
-      push(arr:stack, value:sum);
-      sum = 0;
-    }
-    "pop" -> {
-      sum = pop(arr:stack);
-    }
-    "swap" -> {
-      let a = pop(arr:stack);
-      let b = pop(arr:stack);
-      push(arr:stack, value:a);
-      push(arr:stack, value:a);
-    }
-    "print" -> {
-      println(value:pop(arr:stack));
-    }
-    "debug" -> {
-      println(value:stack);
-    }
-    "drop" -> {
-      pop(arr:stack);
-    }
-    "exit" -> {
-      exit(code:sum);
-    }
-    ? -> {
-      println(value:"unknowm command");
-    }
-  }
-}
+pubFunc();
+prvFunc();

@@ -74,7 +74,7 @@ public class ImportNode implements Node {
     }
     ContainedInterpreter interpreter = new ContainedInterpreter(parser, env.branch());
     Builtins.registerAll(interpreter);
-    interpreter.setVariable("__file__", path);
+    interpreter.setVariable("__file__", path, true);
     try {
       interpreter.interpret();
     } catch (Return r) {
@@ -86,14 +86,13 @@ public class ImportNode implements Node {
     } catch (Exception e) {
       throw new RuntimeException(e.getMessage());
     }
-    // add all variables from interpreter.env to env
-    for (Map.Entry<String, Object> entry : interpreter.env.entrySet()) {
-      try { 
-        env.let(entry.getKey(), entry.getValue()); }
-      catch (Exception e) {
-        if (entry.getKey().startsWith("__") && entry.getKey().endsWith("__")) continue; // skip magic variables, including __file__
-        env.set(entry.getKey(), entry.getValue()); }
-      // NOTE: will NOT copy constants
+    // only copy public (alwaysAccessible) names from the module scope into the caller
+    java.util.Set<String> publicNames = interpreter.getEnv().getPublicNames();
+    for (String pubName : publicNames) {
+      if (pubName.startsWith("__") && pubName.endsWith("__")) continue;
+      Object value = interpreter.env.get(pubName);
+      try { env.let(pubName, value); }
+      catch (Exception e) { env.set(pubName, value); }
     }
     //System.out.println("DEBUG/ Imported " + path);
     StackTraceTools.finished();

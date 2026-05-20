@@ -22,7 +22,7 @@ public class CallNode implements Node {
   public Object eval(Scope env) {
     StackTraceTools.add((String) env.get("__file__", env), pos, func);
     Func f = (Func) env.get(func, env);
-    Scope callScope = env.branch();
+    Scope callScope = (f.closureScope() != null) ? f.closureScope().branch() : env.branch();
     java.util.List<String> fParams = f.params();
     for (Pair<String, Node> arg : args) {
       if (fParams != null && !fParams.contains(arg.getKey())) {

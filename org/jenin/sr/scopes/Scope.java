@@ -79,4 +79,5 @@ public class Scope {
     else throw new RuntimeException("Unknown variable: " + name);
   }
   public HashMap<String, Object> getEnv() { return env; }
+  public Set<String> getPublicNames() { return new HashSet<>(alwaysAccessible); }
 }

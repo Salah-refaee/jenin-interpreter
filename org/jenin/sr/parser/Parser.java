@@ -49,17 +49,14 @@ public class Parser {
     if (currentToken.type == TokenType.KEYWORD) {
       if (currentToken.value.equals("public")) {
         ispublic = true;
-        eat(TokenType.KEYWORD, "public");  // eat the public keyword
-        if (currentToken.type != TokenType.KEYWORD && !(List.of("let", "const", "fn", "namespace").contains(currentToken.value)) ) throw new RuntimeException("Expected keywords 'let', 'const', 'fn' or 'namespace' after public, at line " + currentToken.line + ", col " + currentToken.col);
-        // continue parsing
-        return parseStatement();
+        eat(TokenType.KEYWORD, "public");
+        if (currentToken.type != TokenType.KEYWORD || !(List.of("let", "const", "fn", "namespace").contains(currentToken.value))) throw new RuntimeException("Expected 'let', 'const', 'fn' or 'namespace' after public, at line " + currentToken.line + ", col " + currentToken.col);
       } else if (currentToken.value.equals("private")) {
         ispublic = false;
-        eat(TokenType.KEYWORD, "private");  // eat the private keyword
-        if (currentToken.type != TokenType.KEYWORD || !(List.of("let", "const", "fn", "namespace").contains(currentToken.value)) ) throw new RuntimeException("Expected keywords 'let', 'const', 'fn' or 'namespace' after private, at line " + currentToken.line + ", col " + currentToken.col);
-        // continue parsing
-        return parseStatement();
-      } else if (currentToken.value.equals("let")) {
+        eat(TokenType.KEYWORD, "private");
+        if (currentToken.type != TokenType.KEYWORD || !(List.of("let", "const", "fn", "namespace").contains(currentToken.value))) throw new RuntimeException("Expected 'let', 'const', 'fn' or 'namespace' after private, at line " + currentToken.line + ", col " + currentToken.col);
+      }
+      if (currentToken.value.equals("let")) {
         eat(TokenType.KEYWORD, "let");
         String name = currentToken.value;
         eat(TokenType.IDENTIFIER, name);

@@ -20,7 +20,7 @@ public class FuncDefinitionNode implements Node {
   }
 
   public Object eval(Scope env) {
-    env.define(name, new Jfunction(name, params, body), ispublic);
+    env.define(name, new Jfunction(name, params, body, env), ispublic);
     return null;
   }
 

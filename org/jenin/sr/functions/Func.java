@@ -9,4 +9,5 @@ public interface Func {
   String name();
   String strDebug();
   List<String> params();
+  default Scope closureScope() { return null; }
 }

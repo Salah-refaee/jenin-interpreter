@@ -18,13 +18,15 @@ public class LoopNode implements Node {
   }
 
   public Object eval(Scope env) {
+    int depthBefore = StackTraceTools.depth();
     StackTraceTools.add((String) env.get("__file__", env), pos, "<loop>");
+    int loopDepth = StackTraceTools.depth();
     while (checkTruthy(condition.eval(env))) {
       try { body.eval(env); }
-      catch (Break b) { break; }
-      catch (Continue c) { continue; }
+      catch (Break b) { StackTraceTools.restoreTo(loopDepth); break; }
+      catch (Continue c) { StackTraceTools.restoreTo(loopDepth); continue; }
     }
-    StackTraceTools.finished();
+    StackTraceTools.restoreTo(depthBefore);
     return null;
   }
 

@@ -20,6 +20,7 @@ public class CallNode implements Node {
   }
 
   public Object eval(Scope env) {
+    int depthBefore = StackTraceTools.depth();
     StackTraceTools.add((String) env.get("__file__", env), pos, resolveParentTree(env));
     Func f = (Func) env.get(func, env);
     Scope callScope = (f.closureScope() != null) ? f.closureScope().branch() : env.branch();
@@ -42,8 +43,7 @@ public class CallNode implements Node {
       StackTraceTools.finished();
       return obj;
     } catch (Return r) {
-      StackTraceTools.finished();
-      StackTraceTools.finished();
+      StackTraceTools.restoreTo(depthBefore);
       return r.value;
     }
   }

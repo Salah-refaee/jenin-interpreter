@@ -16,12 +16,15 @@ public class NamespaceAccessNode implements Node {
 
   public Object eval(Scope env) {
     StackTraceTools.add((String) env.get("__file__", env), pos, "<namespace access>");
-    // path[0] is the root namespace name in env; rest descend into sub-scopes
-    Object current = env.get(path.get(0), env);
-    for (int i = 1; i < path.size(); i++) {
-      if (!(current instanceof Scope))
-        throw new RuntimeException(path.get(i - 1) + " is not a namespace");
-      current = ((Scope) current).get(path.get(i), env);
+    Scope current = env;
+    for (String name : path) {
+      try {
+        current = (Scope) current.get(name, env);
+      } catch (Exception e) {
+        String msg = e.getMessage();
+        if (msg.contains("not found")) throw new RuntimeException("Namespace " + name + " not found");
+        else throw e;
+      }
     }
     StackTraceTools.finished();
     return current;

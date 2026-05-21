@@ -22,6 +22,7 @@ public class NamespaceCallNode implements Node {
   }
 
   public Object eval(Scope env) {
+    int depthBefore = StackTraceTools.depth();
     String label = nsName + "::" + String.join("::", path);
     StackTraceTools.add((String) env.get("__file__", env), pos, label);
 
@@ -57,8 +58,7 @@ public class NamespaceCallNode implements Node {
       StackTraceTools.finished();
       return result;
     } catch (Return r) {
-      StackTraceTools.finished();
-      StackTraceTools.finished();
+      StackTraceTools.restoreTo(depthBefore);
       return r.value;
     }
   }

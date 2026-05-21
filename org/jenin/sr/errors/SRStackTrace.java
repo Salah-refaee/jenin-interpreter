@@ -15,6 +15,12 @@ public class SRStackTrace {
     if (!elements.isEmpty()) elements.remove(elements.size() - 1);
   }
 
+  public int depth() { return elements.size(); }
+
+  public void restoreTo(int depth) {
+    while (elements.size() > depth) elements.remove(elements.size() - 1);
+  }
+
   public void printTrace() {
     Collections.reverse(elements);
     for (SRStackTraceElement element : elements) System.out.println(element);

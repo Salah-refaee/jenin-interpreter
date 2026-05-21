@@ -10,8 +10,8 @@ namespace ns {
   }
 
   private fn pswap() {
-    let a = pop();
-    let b = pop();
+    let a = ppop();
+    let b = ppop();
     ppush(value: a);
     ppush(value: b);
   }
@@ -69,3 +69,13 @@ ns::reset();
 ns::execute(instr: "push", args: [1, 2]);
 ns::execute(instr: "add", args: null);
 ns::execute(instr: "print", args: null);
+
+
+namespace nms {
+  namespace another {
+    public fn crash() {
+      a = 7;
+    }
+    crash();
+  }
+}

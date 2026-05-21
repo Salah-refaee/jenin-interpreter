@@ -9,9 +9,9 @@ public class StackTraceTools {
     st.add(new SRStackTraceElement(fileName, pos, functionName));
   }
 
-  public static void finished() {
-    st.remove();
-  }
+  public static void finished() { st.remove(); }
+  public static int depth() { return st.depth(); }
+  public static void restoreTo(int d) { st.restoreTo(d); }
 
   public static void dump() {
     st.printTrace();

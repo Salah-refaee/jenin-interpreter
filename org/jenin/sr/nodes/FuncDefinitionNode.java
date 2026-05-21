@@ -2,6 +2,7 @@ package org.jenin.sr.nodes;
 
 import org.jenin.sr.scopes.Scope;
 import org.jenin.sr.additional.Pair;
+import org.jenin.sr.functions.Jfunction;
 import java.util.List;
 
 public class FuncDefinitionNode implements Node {

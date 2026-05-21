@@ -24,6 +24,8 @@ public class BlockNode implements Node {
     return last;
   }
 
+  public List<Node> getStatements() { return statements; }
+
   public String strDebug() {
     return "{\n" + statements.stream().map(Node::strDebug).collect(Collectors.joining("\n")) + "\n}";
   }

@@ -190,6 +190,12 @@ public class Parser {
           } else break;
         }
         return new ConditionalChainNode(cases, defaultCase, pos);
+      } else if (currentToken.value.equals("namespace")) {
+        eat(TokenType.KEYWORD, "namespace");
+        String name = currentToken.value;
+        eat(TokenType.IDENTIFIER, name);
+        Node body = parseBlock();
+        return new NamespaceNode(name, ((BlockNode) body).getStatements(), pos, ispublic);
       }
     } else if (currentToken.type == TokenType.IDENTIFIER) {
       String name = currentToken.value;
@@ -230,6 +236,37 @@ public class Parser {
         Node value = parseExpression();
         eat(TokenType.PUNCTUATION, ";");
         return new FieldAssignNode(name, fieldName, value, pos);
+      } else if (currentToken.type == TokenType.OPERATOR && currentToken.value.equals("::")) {
+        eat(TokenType.OPERATOR, "::");
+        List<String> names = new ArrayList<>();
+        while (currentToken.type == TokenType.IDENTIFIER) {
+          names.add(currentToken.value);
+          eat(TokenType.IDENTIFIER, currentToken.value);
+          if (currentToken.type == TokenType.OPERATOR && currentToken.value.equals("::")) {
+            eat(TokenType.OPERATOR, "::");
+            if (currentToken.type != TokenType.IDENTIFIER) throw new RuntimeException("Expected identifier after '::', at line " + currentToken.line + ", col " + currentToken.col);
+          } else break;
+        }
+        if (currentToken.type == TokenType.PUNCTUATION && currentToken.value.equals("(")) {
+          eat(TokenType.PUNCTUATION, "(");
+          List<Pair<String, Node>> callArgs = new ArrayList<>();
+          while (!(currentToken.type == TokenType.PUNCTUATION && currentToken.value.equals(")"))) {
+            String argName = currentToken.value;
+            eat(TokenType.IDENTIFIER, argName);
+            eat(TokenType.OPERATOR, ":");
+            Node argValue = parseExpression();
+            callArgs.add(new Pair<>(argName, argValue));
+            if (currentToken.type == TokenType.PUNCTUATION && currentToken.value.equals(","))
+              eat(TokenType.PUNCTUATION, ",");
+          }
+          eat(TokenType.PUNCTUATION, ")");
+          eat(TokenType.PUNCTUATION, ";");
+          return new NamespaceCallNode(name, names, callArgs, pos);
+        }
+        List<String> fullPath = new ArrayList<>();
+        fullPath.add(name);
+        fullPath.addAll(names);
+        return new NamespaceAccessNode(fullPath, pos);
       }
     } else if (currentToken.type == TokenType.SCOPESTART) {
       return parseBlock();
@@ -340,6 +377,10 @@ public class Parser {
         node = new FieldAccessNode(node, field, fpos);
       }
       return node;
+    }
+    if (currentToken.type == TokenType.KEYWORD && currentToken.value.equals("null")) {
+      eat(TokenType.KEYWORD, "null");
+      return new LiteralNode(null, pos);
     }
     throw new RuntimeException("Unexpected token: " + currentToken.type + "(" + currentToken.value
       + ") at line " + currentToken.line + ", col " + currentToken.col);

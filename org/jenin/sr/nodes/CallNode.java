@@ -20,7 +20,7 @@ public class CallNode implements Node {
   }
 
   public Object eval(Scope env) {
-    StackTraceTools.add((String) env.get("__file__", env), pos, func);
+    StackTraceTools.add((String) env.get("__file__", env), pos, resolveParentTree(env));
     Func f = (Func) env.get(func, env);
     Scope callScope = (f.closureScope() != null) ? f.closureScope().branch() : env.branch();
     java.util.List<String> fParams = f.params();
@@ -45,6 +45,22 @@ public class CallNode implements Node {
       StackTraceTools.finished();
       StackTraceTools.finished();
       return r.value;
+    }
+  }
+
+  public String resolveParentTree(Scope env) {
+    // recursive, like: Namespace1.Namespace2.Namespace3.func
+    try {
+      //if (env.get("__MyName__", env).toString().) {
+      String tmp = env.get("__MyName__", env).toString();
+      if (resolveParentTree((Scope)env.get("super", env)) != func) {
+        return resolveParentTree((Scope)env.get("super", env)) + "." + tmp;
+      } else {
+        return tmp + "." + func;
+      }
+      //}
+    } catch (RuntimeException e) {
+      return func;
     }
   }
 

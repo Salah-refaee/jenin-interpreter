@@ -1,4 +1,71 @@
-import "module.jn";
+namespace ns {
+  private let stack = [];
 
-pubFunc();
-prvFunc();
+  private fn ppush(value) {
+    push(arr: stack, value: value);
+  }
+
+  private fn ppop() {
+    return pop(arr: stack);
+  }
+
+  private fn pswap() {
+    let a = pop();
+    let b = pop();
+    ppush(value: a);
+    ppush(value: b);
+  }
+
+  private fn pdebug() {
+    println(value: stack);
+  }
+
+  public fn reset() {
+    stack = [];
+  }
+
+  public fn execute(instr, args) {
+    switch (instr) {
+      "push" -> {
+        let i = 0;
+        loop (i < len(value: args)) {
+          ppush(value: args[i]);
+          i = i + 1;
+        }
+      },
+      "drop" -> {
+        ppop();
+      },
+      "swap" -> {
+        pswap();
+      },
+      "dup" -> {
+        let tmp = ppop();
+        ppush(value: tmp);
+        ppush(value: tmp);
+      },
+      "debug" -> {
+        pdebug();
+      },
+      "print" -> {
+        println(value: ppop());
+      },
+      "add" -> {
+        pswap();
+        ppush(value: ppop() + ppop());
+      },
+      "exit" -> {
+        exit(code: ppop());
+      },
+      ? -> {
+        panic(msg: strConcat(a: "unknown command: ", b: instr));
+      }
+    }
+  }
+}
+
+# test
+ns::reset();
+ns::execute(instr: "push", args: [1, 2]);
+ns::execute(instr: "add", args: null);
+ns::execute(instr: "print", args: null);

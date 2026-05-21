@@ -15,7 +15,7 @@ public class Lexer {
   private final List<String> keywords = Arrays.asList(
     "let", "del", "switch", "case", "default", "return", "fn",
     "loop", "break", "continue", "const", "struct", "import", 
-    "if", "else", "public", "private", "namespace"
+    "if", "else", "public", "private", "namespace", "null"
   );
 
   public Lexer(String input) {
@@ -185,6 +185,12 @@ public class Lexer {
       if (c == ':') {
         idx++;
         col++;
+        if (idx < input.length() && input.charAt(idx) == ':') {
+          // double colon is a namespace access operator
+          idx++;
+          col++;
+          return new Token(TokenType.OPERATOR, "::", line, col - 2);
+        }
         return new Token(TokenType.OPERATOR, ":", line, col - 1);
       }
       if (c == ';') {

@@ -2,8 +2,7 @@ package org.jenin.sr.interpreter;
 
 import org.jenin.sr.parser.Parser;
 import org.jenin.sr.scopes.Scope;
-import org.jenin.sr.functions.NativeFunc;
-import org.jenin.sr.nodes.Jfunction;
+import org.jenin.sr.functions.*;
 //import org.jenin.sr.nodes.Node;
 
 public class Interpreter {

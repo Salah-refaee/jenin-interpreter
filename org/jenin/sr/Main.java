@@ -5,7 +5,7 @@ A basic scripting language I wrote in my free time.
 The name "Jenin" comes from my city, Jenin (Arabic: "جنين"),
 a city in Palestine where I was born and currently live.
 
-This project is now 1 30 days old! a lot of work has been done,
+This project is now 30 days old! a lot of work has been done,
 and I'm happy with the results so far, i added a lot of stuff:
 - Import system w/ classloader
 - Namespaces
@@ -16,11 +16,11 @@ and I'm happy with the results so far, i added a lot of stuff:
 - Better error messages (a little bit at least)
 - One of more of builtin functions got better
 - Visibility modifiers (public, private, for now...)
+- Better error messages (more detailed, such as printing the exact line of the error)
+* NOTE: PARSER ONLY, Runtime errors use StackTraceTools, no line printing needed
 
 I'm planning to add more features in the future, such as:
 - Better error handling for the interpreter (implementing try-catch system)
-- Better error messages (more detailed, such as printing the exact line of the error)
-* NOTE: PARSER ONLY, Runtime errors use StackTraceTools, no line printing needed
 - Better structs
 - May add experimental classes (not sure yet)
 

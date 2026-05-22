@@ -1,8 +1,0 @@
-private fn prvFunc() {
-  println(value: "this is private!");
-}
-
-public fn pubFunc() {
-  println(value: "this is public! executing private...");
-  prvFunc();
-}

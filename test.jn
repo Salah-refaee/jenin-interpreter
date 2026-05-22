@@ -1,0 +1,4 @@
+let n = 8;
+if (n > 0) {
+  println(value "Non-zero");
+}

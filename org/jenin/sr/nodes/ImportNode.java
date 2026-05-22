@@ -63,7 +63,7 @@ public class ImportNode implements Node {
     } catch (IOException e) {
       throw new RuntimeException("Error reading file: " + e.getMessage());
     }
-    Lexer lexer = new Lexer(input);
+    Lexer lexer = new Lexer(input, path);
     Parser parser = new Parser(lexer);
     class ContainedInterpreter extends Interpreter {
       public HashMap<String, Object> env;

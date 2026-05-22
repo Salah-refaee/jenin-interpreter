@@ -25,6 +25,9 @@ public class NamespaceNode implements Node {
     StackTraceTools.add((String) env.get("__file__", env), pos, "<namespace " + name + ">");
     Scope nsScope = env.branch();
     this.scope = nsScope;
+    nsScope.setConst("__MyName__", name, false);
+    nsScope.setConst("super", env, false);
+    nsScope.setConst("this", nsScope, false);
     for (Node node : nodes) {
       node.eval(nsScope);
     }

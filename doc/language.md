@@ -135,6 +135,25 @@ println(value: Point.x);
 
 ---
 
+## Namespaces
+
+namespace Ns {
+  private let x = 8;
+
+  public set(n) {
+    x = n;
+  }
+
+  public get() {
+    return x;
+  }
+}
+
+Ns::set(n: 5);
+println(value: Ns::get());
+
+---
+
 ## Import
 
 ```
@@ -143,7 +162,6 @@ import "modules/Math.class";    # import a native Java module
 ```
 
 All names defined at the top level of an imported `.jn` file become available in the current scope.
-(WARN: starting from version 0.4 and above, all names you import will be stored in a namespace)
 
 ---
 

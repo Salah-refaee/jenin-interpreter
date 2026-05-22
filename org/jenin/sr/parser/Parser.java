@@ -5,6 +5,7 @@ import org.jenin.sr.lexer.Token;
 import org.jenin.sr.lexer.TokenType;
 import org.jenin.sr.additional.Pair;
 import org.jenin.sr.nodes.*;
+import org.jenin.sr.runtime.ParseException;
 import java.util.*;
 
 public class Parser {
@@ -20,8 +21,12 @@ public class Parser {
     if (currentToken.type == type && currentToken.value.equals(value)) {
       currentToken = lexer.nextToken();
     } else {
-      throw new RuntimeException("Unexpected token: " + currentToken.type + "(" + currentToken.value
-        + "), expected: " + type + "(" + value + ") at line " + currentToken.line + ", col " + currentToken.col);
+      throw new ParseException(
+        "Unexpected token: " + currentToken.type + "(" + currentToken.value +
+        "), expected: " + type + "(" + value + ")",
+        lexer.getFile(),
+        currentToken
+      );
     }
   }
 
@@ -50,11 +55,21 @@ public class Parser {
       if (currentToken.value.equals("public")) {
         ispublic = true;
         eat(TokenType.KEYWORD, "public");
-        if (currentToken.type != TokenType.KEYWORD || !(List.of("let", "const", "fn", "namespace").contains(currentToken.value))) throw new RuntimeException("Expected 'let', 'const', 'fn' or 'namespace' after public, at line " + currentToken.line + ", col " + currentToken.col);
+        if (currentToken.type != TokenType.KEYWORD || !(List.of("let", "const", "fn", "namespace").contains(currentToken.value)))
+          throw new ParseException(
+            "Expected 'let', 'const', 'fn' or 'namespace' after public",
+            lexer.getFile(),
+            currentToken
+          );
       } else if (currentToken.value.equals("private")) {
         ispublic = false;
         eat(TokenType.KEYWORD, "private");
-        if (currentToken.type != TokenType.KEYWORD || !(List.of("let", "const", "fn", "namespace").contains(currentToken.value))) throw new RuntimeException("Expected 'let', 'const', 'fn' or 'namespace' after private, at line " + currentToken.line + ", col " + currentToken.col);
+        if (currentToken.type != TokenType.KEYWORD || !(List.of("let", "const", "fn", "namespace").contains(currentToken.value)))
+          throw new ParseException(
+            "Expected 'let', 'const', 'fn' or 'namespace' after private",
+            lexer.getFile(),
+            currentToken
+          );
       }
       if (currentToken.value.equals("let")) {
         eat(TokenType.KEYWORD, "let");
@@ -103,7 +118,6 @@ public class Parser {
               defaultCase = parseBlockNonScoped();
             else
               defaultCase = parseExpression();
-            //eat(TokenType.SCOPEEND, "}");  // already eaten below
             break;
           }
         }
@@ -244,7 +258,12 @@ public class Parser {
           eat(TokenType.IDENTIFIER, currentToken.value);
           if (currentToken.type == TokenType.OPERATOR && currentToken.value.equals("::")) {
             eat(TokenType.OPERATOR, "::");
-            if (currentToken.type != TokenType.IDENTIFIER) throw new RuntimeException("Expected identifier after '::', at line " + currentToken.line + ", col " + currentToken.col);
+            if (currentToken.type != TokenType.IDENTIFIER)
+              throw new ParseException(
+                "Expected identifier after '::'",
+                lexer.getFile(),
+                currentToken
+              );
           } else break;
         }
         if (currentToken.type == TokenType.PUNCTUATION && currentToken.value.equals("(")) {
@@ -262,11 +281,23 @@ public class Parser {
           eat(TokenType.PUNCTUATION, ")");
           eat(TokenType.PUNCTUATION, ";");
           return new NamespaceCallNode(name, names, callArgs, pos);
+        } else if (currentToken.type != TokenType.PUNCTUATION || currentToken.value != ";") {
+          throw new ParseException(
+            "Expected '(' or ';' after namespace access",
+            lexer.getFile(),
+            currentToken
+          );
         }
         List<String> fullPath = new ArrayList<>();
         fullPath.add(name);
         fullPath.addAll(names);
         return new NamespaceAccessNode(fullPath, pos);
+      } else {
+        throw new ParseException(
+          "Unexpected token: " + currentToken.type + "(" + currentToken.value + ")",
+          lexer.getFile(),
+          currentToken
+        );
       }
     } else if (currentToken.type == TokenType.SCOPESTART) {
       return parseBlock();
@@ -382,8 +413,11 @@ public class Parser {
       eat(TokenType.KEYWORD, "null");
       return new LiteralNode(null, pos);
     }
-    throw new RuntimeException("Unexpected token: " + currentToken.type + "(" + currentToken.value
-      + ") at line " + currentToken.line + ", col " + currentToken.col);
+    throw new ParseException(
+      "Unexpected token: " + currentToken.type + "(" + currentToken.value + ")",
+      lexer.getFile(),
+      currentToken
+    );
   }
 
   public Node parse() {

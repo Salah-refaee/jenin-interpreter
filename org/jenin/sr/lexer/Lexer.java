@@ -7,6 +7,7 @@ import org.jenin.sr.additional.Pair;
 
 public class Lexer {
   private String input;
+  private String file;
   private int idx = 0;
   private int line = 1;
   private int col = 1;
@@ -18,9 +19,14 @@ public class Lexer {
     "if", "else", "public", "private", "namespace", "null"
   );
 
-  public Lexer(String input) {
+  public Lexer(String input, String file) {
     this.input = input;
+    this.file = file;
     cleanup();
+  }
+
+  public String getFile() {
+    return file;
   }
 
   // unused but useful for extending the lexer

@@ -78,6 +78,13 @@ public class Scope {
     else if (parent != null) parent.del(name);
     else throw new RuntimeException("Unknown variable: " + name);
   }
+  public boolean has(String name) {
+    if (env.containsKey(name)) return true;
+    return false;
+  }
+  public Scope getParent() {
+    return parent;
+  }
   public HashMap<String, Object> getEnv() { return env; }
   public Set<String> getPublicNames() { return new HashSet<>(alwaysAccessible); }
 }

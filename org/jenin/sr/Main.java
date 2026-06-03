@@ -9,7 +9,7 @@ This project is now 30 days old! a lot of work has been done,
 and I'm happy with the results so far, i added a lot of stuff:
 - Import system w/ classloader
 - Namespaces
-- Structs
+- Better Structs
 - Better conditionals
 - Better loops
 - Better error handling for the source code (StackTraceTools is now getting used more correctly)
@@ -21,7 +21,6 @@ and I'm happy with the results so far, i added a lot of stuff:
 
 I'm planning to add more features in the future, such as:
 - Better error handling for the interpreter (implementing try-catch system)
-- Better structs
 - May add experimental classes (not sure yet)
 
 The current implementation has some small bugs,
@@ -50,7 +49,7 @@ import java.nio.file.Paths;
 import java.io.IOException;
 
 public class Main {
-  public static final String VERSION = "0.4.1";
+  public static final String VERSION = "0.4.2-unstable";
   
   public static void error(String message) {
     System.err.println("Error: " + message);

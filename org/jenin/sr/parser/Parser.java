@@ -20,6 +20,15 @@ public class Parser {
     this.currentToken = lexer.nextToken();
   }
 
+  private void eatArgName() {
+    if (currentToken.type != TokenType.IDENTIFIER && currentToken.type != TokenType.KEYWORD)
+      throw new ParseException(
+        "Expected argument name, got " + currentToken.type + "(" + currentToken.value + ")",
+        lexer.getFile(), currentToken
+      );
+    currentToken = lexer.nextToken();
+  }
+
   private void eat(TokenType type, String value) {
     if (currentToken.type == type && currentToken.value.equals(value)) {
       currentToken = lexer.nextToken();
@@ -272,7 +281,7 @@ public class Parser {
         List<Pair<String, Node>> args = new ArrayList<>();
         while (!(currentToken.type == TokenType.PUNCTUATION && currentToken.value.equals(")"))) {
           String argName = currentToken.value;
-          eat(TokenType.IDENTIFIER, argName);
+          eatArgName();
           eat(TokenType.OPERATOR, ":");
           Node argValue = parseExpression();
           args.add(new Pair<>(argName, argValue));
@@ -319,7 +328,7 @@ public class Parser {
           List<Pair<String, Node>> callArgs = new ArrayList<>();
           while (!(currentToken.type == TokenType.PUNCTUATION && currentToken.value.equals(")"))) {
             String argName = currentToken.value;
-            eat(TokenType.IDENTIFIER, argName);
+            eatArgName();
             eat(TokenType.OPERATOR, ":");
             Node argValue = parseExpression();
             callArgs.add(new Pair<>(argName, argValue));
@@ -390,6 +399,14 @@ public class Parser {
 
   private Node parseFactor() {
     Pair<Integer, Integer> pos = new Pair<>(currentToken.line, currentToken.col);
+    if (currentToken.type == TokenType.OPERATOR && currentToken.value.equals("-")) {
+      eat(TokenType.OPERATOR, "-");
+      return new UnaryOpNode("-", parseFactor(), pos);
+    }
+    if (currentToken.type == TokenType.OPERATOR && currentToken.value.equals("!")) {
+      eat(TokenType.OPERATOR, "!");
+      return new UnaryOpNode("!", parseFactor(), pos);
+    }
     if (currentToken.type == TokenType.PUNCTUATION && currentToken.value.equals("(")) {
       eat(TokenType.PUNCTUATION, "(");
       Node node = parseExpression();
@@ -440,14 +457,45 @@ public class Parser {
       return new CallNode(name, args, pos);
     }
     if (currentToken.type == TokenType.IDENTIFIER) {
-      if (lexer.peek().type == TokenType.PUNCTUATION && lexer.peek().value.equals("(")) {
+      if (lexer.peek().type == TokenType.OPERATOR && lexer.peek().value.equals("::")) {
+        String nsName = currentToken.value;
+        eat(TokenType.IDENTIFIER, nsName);
+        eat(TokenType.OPERATOR, "::");
+        List<String> path = new ArrayList<>();
+        while (currentToken.type == TokenType.IDENTIFIER) {
+          path.add(currentToken.value);
+          eat(TokenType.IDENTIFIER, currentToken.value);
+          if (currentToken.type == TokenType.OPERATOR && currentToken.value.equals("::"))
+            eat(TokenType.OPERATOR, "::");
+          else break;
+        }
+        if (currentToken.type == TokenType.PUNCTUATION && currentToken.value.equals("(")) {
+          eat(TokenType.PUNCTUATION, "(");
+          List<Pair<String, Node>> callArgs = new ArrayList<>();
+          while (!(currentToken.type == TokenType.PUNCTUATION && currentToken.value.equals(")"))) {
+            String argName = currentToken.value;
+            eatArgName();
+            eat(TokenType.OPERATOR, ":");
+            Node argValue = parseExpression();
+            callArgs.add(new Pair<>(argName, argValue));
+            if (currentToken.type == TokenType.PUNCTUATION && currentToken.value.equals(","))
+              eat(TokenType.PUNCTUATION, ",");
+          }
+          eat(TokenType.PUNCTUATION, ")");
+          return new NamespaceCallNode(nsName, path, callArgs, pos);
+        }
+        List<String> fullPath = new ArrayList<>();
+        fullPath.add(nsName);
+        fullPath.addAll(path);
+        return new NamespaceAccessNode(fullPath, pos);
+      } else if (lexer.peek().type == TokenType.PUNCTUATION && lexer.peek().value.equals("(")) {
         String name = currentToken.value;
         eat(TokenType.IDENTIFIER, name);
         eat(TokenType.PUNCTUATION, "(");
         List<Pair<String, Node>> args = new ArrayList<>();
         while (!(currentToken.type == TokenType.PUNCTUATION && currentToken.value.equals(")"))) {
           String argName = currentToken.value;
-          eat(TokenType.IDENTIFIER, argName);
+          eatArgName();
           eat(TokenType.OPERATOR, ":");
           Node argValue = parseExpression();
           args.add(new Pair<>(argName, argValue));

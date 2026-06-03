@@ -22,3 +22,8 @@ jar cfm "$JAR_FILE" "$MANIFEST_FILE" -C "$OUT_DIR" .
 
 echo "Built: $JAR_FILE"
 echo "Run with: java -jar $JAR_FILE <file.jn>"
+
+if [ -f "FileModule.java" ]; then
+  javac -cp "$JAR_FILE" FileModule.java
+  echo "Compiled: FileModule.class"
+fi

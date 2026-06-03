@@ -141,7 +141,7 @@ public class Builtins {
     }), true);
 
     interpreter.registerNativeFunc("strReplace", new NativeFunc("strReplace", 3, (scope) -> {
-      return ((String) scope.get("str", scope)).replace((String) scope.get("old", scope), (String) scope.get("new", scope));
+      return ((String) scope.get("str", scope)).replace((String) scope.get("old", scope), (String) scope.get("repl", scope));
     }), true);
 
     interpreter.registerNativeFunc("strTrim", new NativeFunc("strTrim", 1, (scope) -> {

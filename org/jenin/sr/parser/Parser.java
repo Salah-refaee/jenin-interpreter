@@ -6,11 +6,14 @@ import org.jenin.sr.lexer.TokenType;
 import org.jenin.sr.additional.Pair;
 import org.jenin.sr.nodes.*;
 import org.jenin.sr.runtime.ParseException;
+import org.jenin.sr.complextypes.*;
 import java.util.*;
 
 public class Parser {
   private final Lexer lexer;
   private Token currentToken;
+  private boolean inForLoop = false;
+  private ArrayList<String> structsSeen = new ArrayList<>();
 
   public Parser(Lexer lexer) {
     this.lexer = lexer;
@@ -21,12 +24,19 @@ public class Parser {
     if (currentToken.type == type && currentToken.value.equals(value)) {
       currentToken = lexer.nextToken();
     } else {
-      throw new ParseException(
-        "Unexpected token: " + currentToken.type + "(" + currentToken.value +
-        "), expected: " + type + "(" + value + ")",
-        lexer.getFile(),
-        currentToken
-      );
+      if (inForLoop) {
+        if (currentToken.type == TokenType.PUNCTUATION && currentToken.value.equals(";")) {
+          inForLoop = false;
+          currentToken = lexer.nextToken();
+        }
+      } else {
+        throw new ParseException(
+          "Unexpected token: " + currentToken.type + "(" + currentToken.value +
+          "), expected: " + type + "(" + value + ")",
+          lexer.getFile(),
+          currentToken
+        );
+      }
     }
   }
 
@@ -50,7 +60,7 @@ public class Parser {
 
   private Node parseStatement() {
     Pair<Integer, Integer> pos = new Pair<>(currentToken.line, currentToken.col);
-    boolean ispublic = false; // used with let, fn, struct, and const, also namespace in the future
+    boolean ispublic = false; // used with let, fn, struct, and const, and namespace
     if (currentToken.type == TokenType.KEYWORD) {
       if (currentToken.value.equals("public")) {
         ispublic = true;
@@ -144,31 +154,69 @@ public class Parser {
         eat(TokenType.KEYWORD, "struct");
         String name = currentToken.value;
         eat(TokenType.IDENTIFIER, name);
+        if (structsSeen.contains(name))
+          throw new ParseException(
+            "Struct or class with name " + name + " already defined",
+            lexer.getFile(),
+            currentToken
+          );
+        structsSeen.add(name);
+        if (currentToken.type == TokenType.OPERATOR && currentToken.value.equals("="))
+          eat(TokenType.OPERATOR, "=");
         eat(TokenType.SCOPESTART, "{");
         HashMap<String, Node> fields = new HashMap<>();
         while (currentToken.type != TokenType.SCOPEEND) {
+          Pair<Integer, Integer> fpos = new Pair<>(currentToken.line, currentToken.col);
           String fieldName = currentToken.value;
           eat(TokenType.IDENTIFIER, fieldName);
           eat(TokenType.OPERATOR, ":");
-          Node fieldValue = parseExpression();
-          fields.put(fieldName, fieldValue);
+          String typeName = currentToken.value;
+          eat(TokenType.IDENTIFIER, typeName);
+          fields.put(fieldName, new LiteralNode(typeName, fpos));
           if (currentToken.type == TokenType.PUNCTUATION && currentToken.value.equals(","))
             eat(TokenType.PUNCTUATION, ",");
         }
         eat(TokenType.SCOPEEND, "}");
-        eat(TokenType.PUNCTUATION, ";");
-        return new StructNode(name, fields, pos);
+        if (currentToken.type == TokenType.PUNCTUATION && currentToken.value.equals(";"))
+          eat(TokenType.PUNCTUATION, ";");
+        return new StructNode(name, fields, pos, ispublic);
       } else if (currentToken.value.equals("del")) {
         eat(TokenType.KEYWORD, "del");
         String name = currentToken.value;
         eat(TokenType.IDENTIFIER, name);
         eat(TokenType.PUNCTUATION, ";");
         return new DelNode(name, pos);
-      } else if (currentToken.value.equals("loop")) {
-        eat(TokenType.KEYWORD, "loop");
+      } else if (currentToken.value.equals("while")) {
+        eat(TokenType.KEYWORD, "while");
         Node condition = parseExpression();
         Node body = parseBlockNonScoped();
         return new LoopNode(condition, body, pos);
+      } else if (currentToken.value.equals("for")) {
+        // expected syntax: for (*optional def*; *optional condition*; *optional inc/dec*) { *body* }
+        inForLoop = true;
+        eat(TokenType.KEYWORD, "for");
+        eat(TokenType.PUNCTUATION, "(");
+        Node def = null;
+        if (currentToken.type != TokenType.PUNCTUATION || !currentToken.value.equals(";")) {
+          def = parseStatement();
+        } else {
+          eat(TokenType.PUNCTUATION, ";");
+        }
+        Node condition = null;
+        if (currentToken.type != TokenType.PUNCTUATION || !currentToken.value.equals(";")) {
+          condition = parseExpression();
+        } else {
+          condition = new LiteralNode(true, pos);
+        }
+        eat(TokenType.PUNCTUATION, ";");
+        Node stmt = null;
+        if (currentToken.type != TokenType.PUNCTUATION || !currentToken.value.equals(")")) {
+          stmt = parseStatement();
+        }
+        eat(TokenType.PUNCTUATION, ")");
+        Node body = parseBlockNonScoped();
+        inForLoop = false;
+        return new ForNode(def, condition, stmt, body, pos);
       } else if (currentToken.value.equals("break")) {
         eat(TokenType.KEYWORD, "break");
         eat(TokenType.PUNCTUATION, ";");
@@ -373,6 +421,24 @@ public class Parser {
       eat(TokenType.STRING, currentToken.value);
       return node;
     }
+    if (currentToken.type == TokenType.KEYWORD && currentToken.value.equals("new")) {
+      eat(TokenType.KEYWORD, "new");
+      String name = currentToken.value;
+      eat(TokenType.IDENTIFIER, name);
+      eat(TokenType.PUNCTUATION, "(");
+      List<Pair<String, Node>> args = new ArrayList<>();
+      while (!(currentToken.type == TokenType.PUNCTUATION && currentToken.value.equals(")"))) {
+        String argName = currentToken.value;
+        eat(TokenType.IDENTIFIER, argName);
+        eat(TokenType.OPERATOR, ":");
+        Node argValue = parseExpression();
+        args.add(new Pair<>(argName, argValue));
+        if (currentToken.type == TokenType.PUNCTUATION && currentToken.value.equals(","))
+          eat(TokenType.PUNCTUATION, ",");
+      }
+      eat(TokenType.PUNCTUATION, ")");
+      return new CallNode(name, args, pos);
+    }
     if (currentToken.type == TokenType.IDENTIFIER) {
       if (lexer.peek().type == TokenType.PUNCTUATION && lexer.peek().value.equals("(")) {
         String name = currentToken.value;
@@ -412,6 +478,14 @@ public class Parser {
     if (currentToken.type == TokenType.KEYWORD && currentToken.value.equals("null")) {
       eat(TokenType.KEYWORD, "null");
       return new LiteralNode(null, pos);
+    }
+    if (currentToken.type == TokenType.KEYWORD && currentToken.value.equals("true")) {
+      eat(TokenType.KEYWORD, "true");
+      return new LiteralNode(true, pos);
+    }
+    if (currentToken.type == TokenType.KEYWORD && currentToken.value.equals("false")) {
+      eat(TokenType.KEYWORD, "false");
+      return new LiteralNode(false, pos);
     }
     throw new ParseException(
       "Unexpected token: " + currentToken.type + "(" + currentToken.value + ")",

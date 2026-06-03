@@ -3,6 +3,7 @@ package org.jenin.sr.nodes;
 import org.jenin.sr.scopes.Scope;
 import org.jenin.sr.additional.Pair;
 import org.jenin.sr.errors.StackTraceTools;
+import org.jenin.sr.complextypes.Struct;
 import java.util.Map;
 
 public class FieldAccessNode implements Node {
@@ -20,11 +21,18 @@ public class FieldAccessNode implements Node {
   public Object eval(Scope env) {
     StackTraceTools.add((String) env.get("__file__", env), pos, "<field access ." + field + ">");
     Object obj = object.eval(env);
-    if (!(obj instanceof Map)) throw new RuntimeException("Cannot access field of non-struct: " + object.strDebug());
-    Map<String, Object> map = (Map<String, Object>) obj;
-    if (!map.containsKey(field)) throw new RuntimeException("Unknown field: " + field);
+    Object result;
+    if (obj instanceof Struct) {
+      result = ((Struct) obj).get(field);
+    } else if (obj instanceof Map) {
+      Map<String, Object> map = (Map<String, Object>) obj;
+      if (!map.containsKey(field)) throw new RuntimeException("Unknown field: " + field);
+      result = map.get(field);
+    } else {
+      throw new RuntimeException("Cannot access field of non-struct: " + object.strDebug());
+    }
     StackTraceTools.finished();
-    return map.get(field);
+    return result;
   }
 
   public String strDebug() { return object.strDebug() + "." + field; }

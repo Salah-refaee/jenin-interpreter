@@ -3,6 +3,7 @@ package org.jenin.sr.interpreter;
 import org.jenin.sr.functions.Func;
 import org.jenin.sr.functions.NativeFunc;
 import org.jenin.sr.nodes.Undefined;
+import org.jenin.sr.complextypes.*;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -16,7 +17,7 @@ public class Builtins {
     if (value instanceof String) return "string";
     if (value instanceof Func) return "function";
     if (value instanceof List) return "array";
-    if (value instanceof Map) return "struct";
+    if (value instanceof Struct) return "struct";
     if (value instanceof Undefined) return "undefined";
     return "unknown";
   }
@@ -108,7 +109,7 @@ public class Builtins {
     }), true);
 
     interpreter.registerNativeFunc("panic", new NativeFunc("panic", 1, (scope) -> {
-      throw new RuntimeException(String.valueOf(scope.get("message", scope)));
+      throw new RuntimeException(String.valueOf(scope.get("msg", scope)));
     }), true);
 
     interpreter.registerNativeFunc("type", new NativeFunc("type", 1, (scope) -> {
@@ -181,6 +182,16 @@ public class Builtins {
       @SuppressWarnings("unchecked") List<Object> list = (List<Object>) arrObj;
       if (list.isEmpty()) throw new RuntimeException("pop: array is empty");
       return list.remove(list.size() - 1);
+    }), true);
+
+    interpreter.registerNativeFunc("char2Dec", new NativeFunc("char2Dec", 1, (scope) -> {
+      String str = (String) scope.get("str", scope);
+      if (str.length() != 1) throw new RuntimeException("char2Dec: argument must be a single character");
+      return (int) str.charAt(0);
+    }), true);
+
+    interpreter.registerNativeFunc("dec2Char", new NativeFunc("dec2Char", 1, (scope) -> {
+      return String.valueOf((char) ((Number) scope.get("dec", scope)).intValue());
     }), true);
   }
 }

@@ -3,6 +3,7 @@ package org.jenin.sr.nodes;
 import org.jenin.sr.scopes.Scope;
 import org.jenin.sr.additional.Pair;
 import org.jenin.sr.errors.StackTraceTools;
+import org.jenin.sr.complextypes.Struct;
 import java.util.Map;
 
 public class FieldAssignNode implements Node {
@@ -22,10 +23,16 @@ public class FieldAssignNode implements Node {
   public Object eval(Scope env) {
     StackTraceTools.add((String) env.get("__file__", env), pos, "<field assign " + objName + "." + field + ">");
     Object obj = env.get(objName, env);
-    if (!(obj instanceof Map)) throw new RuntimeException("Cannot assign field of non-struct: " + objName);
-    ((Map<String, Object>) obj).put(field, value.eval(env));
+    Object val = value.eval(env);
+    if (obj instanceof Struct) {
+      ((Struct) obj).set(field, val);
+    } else if (obj instanceof Map) {
+      ((Map<String, Object>) obj).put(field, val);
+    } else {
+      throw new RuntimeException("Cannot assign field of non-struct: " + objName);
+    }
     StackTraceTools.finished();
-    return null;
+    return val;
   }
 
   public String strDebug() { return objName + "." + field + " = " + value.strDebug(); }

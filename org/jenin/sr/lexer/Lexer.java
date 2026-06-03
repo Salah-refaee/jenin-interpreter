@@ -15,9 +15,14 @@ public class Lexer {
 
   private final List<String> keywords = Arrays.asList(
     "let", "del", "switch", "case", "default", "return", "fn",
-    "loop", "break", "continue", "const", "struct", "import", 
-    "if", "else", "public", "private", "namespace", "null"
+    "while", "break", "continue", "const", "struct", "import", 
+    "if", "else", "public", "private", "namespace", "null",
+    "for", "true", "false", "new"
   );
+
+  public Lexer(String input) {
+    this(input, "<unknown>");
+  }
 
   public Lexer(String input, String file) {
     this.input = input;
@@ -79,6 +84,8 @@ public class Lexer {
         if (c == '\n') {
           line++;
           col = 1;
+          idx++;
+          continue;
         } else
           col++;
         idx++;

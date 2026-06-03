@@ -4,6 +4,7 @@ import org.jenin.sr.scopes.Scope;
 import org.jenin.sr.additional.Pair;
 import org.jenin.sr.errors.StackTraceTools;
 import java.util.List;
+import java.util.Objects;
 import java.util.stream.Collectors;
 
 public class SwitchNode implements Node {
@@ -23,7 +24,7 @@ public class SwitchNode implements Node {
     StackTraceTools.add((String) env.get("__file__", env), pos, "<switch>");
     Object value = expr.eval(env);
     for (Pair<Node, Node> case_ : cases) {
-      if (value.equals(case_.getKey().eval(env))) {
+      if (Objects.equals(value, case_.getKey().eval(env))) {
         StackTraceTools.finished();
         return case_.getValue().eval(env);
       }

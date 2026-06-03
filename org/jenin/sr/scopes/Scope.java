@@ -19,6 +19,7 @@ public class Scope {
     if (env.containsKey(name)) {
       if (alwaysAccessible.contains(name) || requesterScope == this || requesterScope.parent == this)
         return env.get(name);
+      throw new RuntimeException("Variable '" + name + "' is private");
     } else if (parent != null) return parent.get(name, this);
     throw new RuntimeException("Unknown variable: " + name);
   }
@@ -68,14 +69,9 @@ public class Scope {
     if (constants.contains(name))
       throw new RuntimeException("Cannot delete constant: " + name);
     if (env.containsKey(name)) {
-      if (alwaysAccessible.contains(name)) {
-        alwaysAccessible.remove(name);
-        env.remove(name);
-      } else {
-        throw new RuntimeException("Unknown variable: " + name);
-      }
-    }
-    else if (parent != null) parent.del(name);
+      alwaysAccessible.remove(name);
+      env.remove(name);
+    } else if (parent != null) parent.del(name);
     else throw new RuntimeException("Unknown variable: " + name);
   }
   public boolean has(String name) {

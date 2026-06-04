@@ -1,6 +1,6 @@
 package org.jenin.sr.nodes;
 
-import org.jenin.sr.nodes.Node;
+//import org.jenin.sr.nodes.Node;
 import org.jenin.sr.scopes.*;
 import org.jenin.sr.additional.*;
 import org.jenin.sr.errors.StackTraceTools;

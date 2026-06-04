@@ -1,4 +1,0 @@
-- [Jenin parser quirks](jenin-parser-quirks.md) — critical parser gaps fixed: namespace calls as expressions, unary minus, keyword arg labels.
-- [Jenin string literals](jenin-string-literals.md) — Lexer never processes escape sequences; use dec2Char for control chars.
-- [Jenin while loops](jenin-while-loops.md) — NonScopedBlockNode reuses scope; never use `let` inside a while body.
-- [Jenin builtins gotchas](jenin-builtins-gotchas.md) — strReplace param renamed `new`→`repl`; toType needs Number not String.

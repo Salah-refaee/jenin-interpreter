@@ -1,5 +1,5 @@
 // TestModule.java
-package modules;
+package modules.nativemods;
 
 import org.jenin.sr.api.JeninModule;
 import org.jenin.sr.interpreter.Interpreter;
@@ -10,6 +10,9 @@ public class TestModule implements JeninModule {
     System.out.println("Hello, " + scope.get("name") + "!");
   }
   public void register(Interpreter interpreter) {
-    interpreter.registerNativeFunc("sayHello", new NativeFunc("sayHello", (scope) -> sayHello(scope)));
+    interpreter.registerNativeFunc("sayHello",
+      new NativeFunc("sayHello", (scope) -> sayHello(scope)),
+      true
+    );
   }
 }

@@ -1,4 +1,6 @@
 /* HashMap wrapper for Jenin */
+package nativemods;
+
 import java.util.*;
 import org.jenin.sr.scopes.Scope;
 import org.jenin.sr.api.*;
@@ -73,7 +75,9 @@ public class Dict implements JeninModule {
         if (!scope.has("dict")) throw new RuntimeException("Dict.keys: dict is null");
         throw new RuntimeException("Dict.keys: " + e.getMessage());
       }
-      return dict.keySet();
+      // dict.keySet() returns a Set<Object> which is not a List<Object>
+      // so we need to convert it to a List<Object>
+      return new ArrayList<>(dict.keySet());
     }), true);
     dictScope.setConst("values", new NativeFunc("values", 1, (scope) -> {
       HashMap<Object, Object> dict;
@@ -84,7 +88,9 @@ public class Dict implements JeninModule {
         if (!scope.has("dict")) throw new RuntimeException("Dict.values: dict is null");
         throw new RuntimeException("Dict.values: " + e.getMessage());
       }
-      return dict.values();
+      // dict.values() returns a Collection<Object> which is not a List<Object>
+      // so we need to convert it to a List<Object>
+      return new ArrayList<>(dict.values());
     }), true);
     dictScope.setConst("contains", new NativeFunc("contains", 2, (scope) -> {
       HashMap<Object, Object> dict;
@@ -100,5 +106,16 @@ public class Dict implements JeninModule {
       }
       return dict.containsKey(key);
     }), true);
+    /*
+     * TODO: add more functions to the Dict class
+     * - current:
+     *   - create()
+     *   - get(dict, key)
+     *   - set(dict, key, value)
+     *   - remove(dict, key)
+     *   - keys(dict)
+     *   - values(dict)
+     *   - contains(dict, key)
+     */
   }
 }

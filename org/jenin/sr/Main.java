@@ -5,7 +5,7 @@ A basic scripting language I wrote in my free time.
 The name "Jenin" comes from my city, Jenin (Arabic: "جنين"),
 a city in Palestine where I was born and currently live.
 
-This project is now 30 days old! a lot of work has been done,
+This project is now more than 30 days old! a lot of work has been done,
 and I'm happy with the results so far, i added a lot of stuff:
 - Import system w/ classloader
 - Namespaces
@@ -49,7 +49,7 @@ import java.nio.file.Paths;
 import java.io.IOException;
 
 public class Main {
-  public static final String VERSION = "0.4.3-unstable";
+  public static final String VERSION = "0.4.3p1-unstable"; // p1 = patch 1
   
   public static void error(String message) {
     System.err.println("Error: " + message);

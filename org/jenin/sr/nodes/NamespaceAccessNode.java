@@ -27,7 +27,7 @@ public class NamespaceAccessNode implements Node {
 
     // Sat 7/6/2026 BUG PATCH
     // * this is a patch for my previous patch, which is a patch for the namespace access bug
-    // when its frashes and checks if its a variable, it checks if the variable exists,
+    // when it crashes and checks if its a variable, it checks if the variable exists,
     // but WITHOUT checking if the value that crashed is the last value in the path
     // * the fix:
     // - when it crashes, after being sure that the value is not a namespace, it checks if its the last value in the path

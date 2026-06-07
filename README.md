@@ -61,7 +61,7 @@ Then run:
 - Error handling is still improving
 - Standard library is minimal
 - Syntax and features may change
-- Tge language is ridiculously unoptimized and it had a huge overhead because of its tree-walk interpretation design
+- The language is ridiculously unoptimized and it had a huge overhead because of its tree-walk interpretation design
 
 ---
 

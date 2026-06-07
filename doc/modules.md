@@ -34,7 +34,7 @@ public class MathModule implements JeninModule {
 ```
 
 Rules:
-- Package must be `nativemods` (not `modules` or any other name).
+- The Java package must match the directory path used in the `import` string inside the wrapper `.jn` file. For example, if the wrapper imports `"nativemods/MathModule.class"`, the class name becomes `nativemods.MathModule`, so the Java package must be `nativemods`. If you used `"math/MathModule.class"` instead, the package would need to be `math`. The name itself doesn't matter — what matters is consistency between the import path and the package declaration.
 - Implement `org.jenin.sr.api.JeninModule` and its `register(Interpreter)` method.
 - Register each function with `interpreter.registerNativeFunc(name, func, true)`.
 - `NativeFunc(name, arity, lambda)` — `arity` is the argument count. Read args inside the lambda with `scope.get("argName", scope)`.
@@ -157,8 +157,8 @@ project/
       FileModule.java
       FileModule.class
   packs/
-    main.jn
-    modules/             ← self-contained copy for distribution
+    main.jn              ← test: imports from packs/modules/ to verify
+    modules/             ←  resolution works from any subdirectory
       dict.jn
       nativemods/
         Dict.java

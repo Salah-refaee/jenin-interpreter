@@ -4,7 +4,7 @@ Jenin is a small scripting language written in Java.
 It was created as a learning project to understand how interpreters work and getting fun while building.
 
 > [!CAUTION]
->  Status: v0.4.3 early development
+>  Status: v0.4.3 early development stage. 
 >  Expect bugs and breaking changes.
 ---
 

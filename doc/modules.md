@@ -156,15 +156,33 @@ project/
       Dict.class
       FileModule.java
       FileModule.class
-  packs/
-    main.jn              ← test: imports from packs/modules/ to verify
-    modules/             ←  resolution works from any subdirectory
-      dict.jn
-      nativemods/
-        Dict.java
-        Dict.class
-        ...
   build.sh               ← builds jenin.jar + compiles all nativemods
   target/
     jenin.jar
 ```
+
+---
+
+## Building a module
+IMPORTANT: to be clear: building the java modules within a module
+
+when you have, in example:
+```
+<whatever the name>/
+  nativemods/
+    MyModule.java
+  API.jn
+```
+you can easily build it as:
+```
+<whatever the name>/
+  nativemods/
+    MyModule.java. // will not be cleared, you should clear it yourself
+    MyModule.class
+  API.jn
+```
+by executing:
+```
+./build_all_modules.sh <path/to>/interpreter.jar yourmodule name
+```
+*(note: the previous shell scripts only accepts the previous module format)*

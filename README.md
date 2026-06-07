@@ -3,7 +3,9 @@
 Jenin is a small scripting language written in Java.  
 It was created as a learning project to understand how interpreters work and getting fun while building.
 
-> ⚠️ Status: v0.4.3 early development, expect bugs and breaking changes.
+> [!CAUTION]
+>  Status: v0.4.3 early development
+>  Expect bugs and breaking changes.
 ---
 
 ## Features
@@ -18,8 +20,9 @@ It was created as a learning project to understand how interpreters work and get
 - Built-in functions (I/O, type conversion, strings)
 - Included java-native functions ClassLoader system
 
-### note: see [language documents](doc/README.md) for more info
-*(some information may not be included, please be careful)*
+> [!TIP]
+> see [language documents](doc/README.md) for more info
+> *(some information may not be included, please be careful)*
 
 ---
 
@@ -45,14 +48,6 @@ Then run:
 
 ---
 
-## Philosophy
-
-- Keep things simple
-- Explicit sometimes (named arguments as an example)
-- Small but flexible core
-
----
-
 ## Project Structure
 
 - Lexer → tokenizes input
@@ -66,16 +61,17 @@ Then run:
 - Error handling is still improving
 - Standard library is minimal
 - Syntax and features may change
+- Tge language is ridiculously unoptimized and it had a huge overhead because of its tree-walk interpretation design
 
 ---
 
 ## Future Plans
 
-- Better standard library
-- Improved error messages
-- More data structures
-- Module system improvements
-- Data types handling improvments (important for structs)
+- Better standard library: In Progress...
+- Improved error messages: In Progress...
+- More data structures: Almost Done...
+- Module system improvements: Almost Done...
+- Data types handling: Almost Done...
 
 ---
 

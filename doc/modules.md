@@ -110,12 +110,12 @@ import "modules/dict.jn";
 | Function | Arguments | Description |
 |---|---|---|
 | `Dict::create` | — | Returns a new empty Dict |
-| `Dict::put` | `dict`, `key`, `value` | Insert or overwrite a key |
-| `Dict::get` | `dict`, `key` | Get a value by key (null if missing) |
-| `Dict::has` | `dict`, `key` | `true` if key exists |
-| `Dict::remove` | `dict`, `key` | Remove a key |
+| `Dict::set` | `dict`, `key`, `value` | Insert or overwrite a key |
+| `Dict::get` | `dict`, `key` | Get a value by key (`null` if missing) |
+| `Dict::contains` | `dict`, `key` | `true` if the key exists |
+| `Dict::remove` | `dict`, `key` | Remove a key, returns the old value |
 | `Dict::keys` | `dict` | Return an array of all keys |
-| `Dict::size` | `dict` | Number of entries |
+| `Dict::values` | `dict` | Return an array of all values |
 
 ### `modules/file.jn` — File I/O
 

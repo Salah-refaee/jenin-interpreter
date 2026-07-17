@@ -5,7 +5,7 @@
 >
 > A complete rewrite is now underway with a cleaner architecture and better performance.
 >
-> This repository will remain online as a historical reference and a source of ideas for the new implementation.
+> This repository will remain online as a historical reference and a source of ideas for the new implementation, be free to fork this repo and/or contribute!
 
 # Jenin Programming Language
 

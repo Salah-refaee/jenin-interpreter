@@ -1,3 +1,12 @@
+> [!WARNING]
+> This repository is no longer under active development.
+>
+> Jenin has reached the end of its educational purpose for me. During its development, I learned a lot about language design, interpreters, and the mistakes I don't want to repeat.
+>
+> A complete rewrite is now underway with a cleaner architecture and better performance.
+>
+> This repository will remain online as a historical reference and a source of ideas for the new implementation.
+
 # Jenin Programming Language
 
 Jenin is a small scripting language written in Java.  
